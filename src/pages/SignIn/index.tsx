@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { Title } from './styles';
+// import { Title } from './styles';
 
 const SignIn: React.FC = () => {
-  return <Title>hello</Title>;
+  return <div />;
 };
 
 export default SignIn;
