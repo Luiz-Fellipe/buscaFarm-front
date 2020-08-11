@@ -1,9 +1,13 @@
 import React from 'react';
 
-// import { Container } from './styles';
+import { Wrapper, Title } from './styles';
 
 const ManageMedicines: React.FC = () => {
-  return <div />;
+  return (
+    <Wrapper>
+      <Title>Página de Medicamentos em construção!</Title>
+    </Wrapper>
+  );
 };
 
 export default ManageMedicines;

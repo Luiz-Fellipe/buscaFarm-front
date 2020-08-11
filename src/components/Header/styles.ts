@@ -43,6 +43,19 @@ export const Navigation = styled.div`
     margin-left: 30px;
     cursor: pointer;
   }
+
+  a {
+    color: ${colors.black};
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-left: 30px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  a.active {
+    color: ${colors.primary};
+  }
 `;
 
 export const NameProfile = styled.div`
