@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { NavLink } from 'react-router-dom';
 import LogoBF from '~/assets/images/Logo.png';
 import User from '~/assets/images/ImageProfile.png';
 import Notifications from '~/assets/images/IconNotifications.png';
@@ -17,12 +18,16 @@ const Header: React.FC = () => {
   return (
     <HeaderApplication>
       <Logo>
-        <img src={LogoBF} alt="" />
+        <NavLink to="/medicamentos">
+          <img src={LogoBF} alt="" />
+        </NavLink>
       </Logo>
       <Navigation>
-        <h5 className="Active">MEDICAMENTOS</h5>
-        <span>FUNCIONÁRIOS</span>
-        <span>ORÇAMENTOS</span>
+        <NavLink to="/medicamentos" className="Active">
+          MEDICAMENTOS
+        </NavLink>
+        <NavLink to="/funcionarios">FUNCIONÁRIOS</NavLink>
+        <NavLink to="/orçamentos">ORÇAMENTOS</NavLink>
       </Navigation>
       <NameProfile>
         <div>
