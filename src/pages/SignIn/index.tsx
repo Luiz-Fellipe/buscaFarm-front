@@ -1,8 +1,7 @@
 import React from 'react';
-
+import { FiMail, FiLock } from 'react-icons/fi';
+import { Form } from '@unform/web';
 import LogoBF from '~/assets/images/Logo.png';
-import UserGreen from '~/assets/images/IconUserGreen.png';
-import LockGreen from '~/assets/images/IconLockGreen.png';
 
 import {
   Container,
@@ -15,8 +14,19 @@ import {
   ArrowLeftTop,
   ArrowRightBottom,
 } from './styles';
+import Input from '~/components/Input';
+import { ButtonPrimary } from '~/components/Button/styles';
+
+interface Request {
+  user: string;
+  password: string;
+}
 
 const SignIn: React.FC = () => {
+  function handleSubmit(data: Request): void {
+    console.log(data);
+  }
+
   return (
     <Container>
       <ArrowLeftTop>
@@ -30,26 +40,23 @@ const SignIn: React.FC = () => {
         <Logo>
           <img src={LogoBF} alt="" />
         </Logo>
-        <User>
-          <div>
-            <img src={UserGreen} alt="" />
-          </div>
-          <input placeholder="Usuário" />
-        </User>
-        <Password>
-          <div>
-            <img src={LockGreen} alt="" />
-          </div>
-          <input placeholder="Senha" />
-        </Password>
+        <Form onSubmit={handleSubmit}>
+          <User>
+            <Input name="user" icon={FiMail} placeholder="Usuário" />
+          </User>
+          <Password>
+            <Input name="password" icon={FiLock} placeholder="Senha" />
+          </Password>
+          <Login>
+            <ButtonPrimary type="submit">
+              <span>Entrar</span>
+            </ButtonPrimary>
+          </Login>
+        </Form>
+
         <Forgot>
           <span>esqueceu sua senha?</span>
         </Forgot>
-        <Login>
-          <button type="button">
-            <span>Entrar</span>
-          </button>
-        </Login>
       </Content>
       <ArrowRightBottom>
         <div className="setup-two">
@@ -61,5 +68,4 @@ const SignIn: React.FC = () => {
     </Container>
   );
 };
-
 export default SignIn;

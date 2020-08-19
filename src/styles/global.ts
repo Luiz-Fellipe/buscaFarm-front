@@ -14,7 +14,7 @@ body {
 }
 
 body, input, button {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Raleway', sans-serif;
   font-size: 16px;
 }
 
