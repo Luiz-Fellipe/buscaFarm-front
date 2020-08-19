@@ -3,22 +3,48 @@ import colors from '~/styles/colors';
 
 interface ContainerProps {
   isFocused: boolean;
+  isFilled: boolean;
 }
 
 export const InputWrapper = styled.div<ContainerProps>`
+  background: ${colors.white};
+  border-radius: 10px;
+  border: 2px solid #d9d9d9;
+  padding: 16px;
+  width: 60%;
+  display: flex;
+  align-items: center;
+  color: #666369;
+
   ${props =>
     props.isFocused &&
+    css`
+      color: ${colors.primary};
+      border-color: ${colors.primary};
+    `}
+
+  ${props =>
+    props.isFilled &&
     css`
       color: ${colors.primary};
     `}
 
   input {
-    width: 250px;
-    border: none;
-    border-bottom: 1px solid #c4c4c4;
+    flex: 1;
+    background: transparent;
+    border: 0;
+    color: #666360;
+
+    &::placeholder {
+      color: #666360;
+    }
 
     &::-webkit-input-placeholder {
       text-align: center;
     }
+  }
+
+  svg {
+    margin-right: 16px;
   }
 `;

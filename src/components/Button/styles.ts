@@ -6,7 +6,7 @@ export const ButtonPrimary = styled.button`
     position: absolute;
     width: 180px;
     height: 60px;
-    top: 120px;
+    top: 75px;
     left: 170px;
     border: none;
 

@@ -63,7 +63,7 @@ export const Password = styled.div`
 export const Forgot = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 120px;
+  margin-top: 90px;
 
   span {
     color: ${colors.primary};
@@ -100,7 +100,7 @@ export const ArrowRightBottom = styled.div`
     width: 20px;
     position: absolute;
     bottom: 0;
-    right: 0;
+    right: 0px;
   }
   .button-two {
     height: 20px;
@@ -109,8 +109,8 @@ export const ArrowRightBottom = styled.div`
   }
 
   .setup-two {
-    margin: 630px -100px;
+    margin: 630px -80px;
     width: 125px;
-    height: 125px;
+    height: 41px;
   }
 `;

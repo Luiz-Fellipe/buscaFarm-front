@@ -47,16 +47,15 @@ const SignIn: React.FC = () => {
           <Password>
             <Input name="password" icon={FiLock} placeholder="Senha" />
           </Password>
+          <Forgot>
+            <span>esqueceu sua senha?</span>
+          </Forgot>
           <Login>
             <ButtonPrimary type="submit">
               <span>Entrar</span>
             </ButtonPrimary>
           </Login>
         </Form>
-
-        <Forgot>
-          <span>esqueceu sua senha?</span>
-        </Forgot>
       </Content>
       <ArrowRightBottom>
         <div className="setup-two">
