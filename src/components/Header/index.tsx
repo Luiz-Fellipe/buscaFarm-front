@@ -18,7 +18,7 @@ const Header: React.FC = () => {
   return (
     <HeaderApplication>
       <Logo>
-        <NavLink to="/medicamentos">
+        <NavLink to="/login">
           <img src={LogoBF} alt="" />
         </NavLink>
       </Logo>
@@ -40,7 +40,9 @@ const Header: React.FC = () => {
       </NameProfile>
       <NotificationsAndLogout>
         <img src={Notifications} alt="" />
-        <img src={Logout} alt="" />
+        <NavLink to="/login">
+          <img src={Logout} alt="" />
+        </NavLink>
       </NotificationsAndLogout>
     </HeaderApplication>
   );

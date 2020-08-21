@@ -4,17 +4,36 @@ import colors from '~/styles/colors';
 interface ContainerProps {
   isFocused: boolean;
   isFilled: boolean;
+  error?: string;
 }
 
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  span {
+    color: red;
+    margin-top: 10px;
+  }
+`;
+
 export const InputWrapper = styled.div<ContainerProps>`
+  display: flex;
   background: ${colors.white};
   border-radius: 10px;
   border: 2px solid #d9d9d9;
   padding: 16px;
-  width: 60%;
-  display: flex;
+  width: 100%;
   align-items: center;
   color: #666369;
+
+  ${props =>
+    props.error &&
+    css`
+      color: red;
+      border-color: red;
+    `}
+
 
   ${props =>
     props.isFocused &&
@@ -28,6 +47,7 @@ export const InputWrapper = styled.div<ContainerProps>`
     css`
       color: ${colors.primary};
     `}
+
 
   input {
     flex: 1;

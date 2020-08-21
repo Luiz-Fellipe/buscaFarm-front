@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { IconBaseProps } from 'react-icons';
 import { useField } from '@unform/core';
 
-import { InputWrapper } from './styles';
+import { InputWrapper, Wrapper } from './styles';
 
 interface Props {
   name: string;
@@ -36,20 +36,22 @@ const Input: React.FC<InputProps> = ({ name, label, icon: Icon, ...rest }) => {
   }, [fieldName, registerField]);
 
   return (
-    <InputWrapper isFilled={isFilled} isFocused={isFocused}>
-      {label && <label htmlFor={fieldName}>{label}</label>}
-      {Icon && <Icon size={20} />}
-      <input
-        onFocus={HandleInputFocus}
-        onBlur={handleInputBlur}
-        id={fieldName}
-        ref={inputRef}
-        defaultValue={defaultValue}
-        {...rest}
-      />
-
-      {error && <span>{error}</span>}
-    </InputWrapper>
+    <Wrapper>
+      <InputWrapper isFilled={isFilled} isFocused={isFocused} error={error}>
+        {label && <label htmlFor={fieldName}>{label}</label>}
+        {Icon && <Icon size={20} />}
+        <input
+          onFocus={HandleInputFocus}
+          onBlur={handleInputBlur}
+          id={fieldName}
+          ref={inputRef}
+          defaultValue={defaultValue}
+          autoComplete="off"
+          {...rest}
+        />
+      </InputWrapper>
+      <span>{error}</span>
+    </Wrapper>
   );
 };
 
