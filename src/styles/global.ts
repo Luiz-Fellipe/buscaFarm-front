@@ -6,11 +6,21 @@ export default createGlobalStyle`
   padding: 0;
   box-sizing: border-box;
   outline: 0;
+
+}
+
+html {
+  height: 100%;
 }
 
 body {
   background: #EEEEEE;
   -webkit-font-smoothing: antialiased;
+
+}
+
+body,#root {
+  height: 100%;
 }
 
 body, input, button {

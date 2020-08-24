@@ -1,21 +1,12 @@
 import React from 'react';
 import { FiMail, FiLock } from 'react-icons/fi';
-import { Form } from '@unform/web';
+import { Link } from 'react-router-dom';
 import LogoBF from '~/assets/images/Logo.png';
 
-import {
-  Container,
-  Content,
-  Logo,
-  User,
-  Password,
-  Forgot,
-  Login,
-  ArrowLeftTop,
-  ArrowRightBottom,
-} from './styles';
+import { Container, Logo, FormLogin, Wrapper } from './styles';
 import Input from '~/components/Input';
 import { ButtonPrimary } from '~/components/Button/styles';
+import ContainerWithBordes from '~/components/ContainerWithBordes';
 
 interface Request {
   user: string;
@@ -28,43 +19,31 @@ const SignIn: React.FC = () => {
   }
 
   return (
-    <Container>
-      <ArrowLeftTop>
-        <div className="setup">
-          <span className="button">
-            <span className="head" />
-          </span>
-        </div>
-      </ArrowLeftTop>
-      <Content>
-        <Logo>
-          <img src={LogoBF} alt="" />
-        </Logo>
-        <Form onSubmit={handleSubmit}>
-          <User>
+    <Wrapper>
+      <ContainerWithBordes
+        widthPercent="30"
+        heightPercent="60"
+        borderHeightPx="100"
+        borderWidthPx="7"
+      >
+        <Container>
+          <Logo>
+            <img src={LogoBF} alt="" />
+          </Logo>
+
+          <FormLogin onSubmit={handleSubmit}>
             <Input name="user" icon={FiMail} placeholder="Usuário" />
-          </User>
-          <Password>
+
             <Input name="password" icon={FiLock} placeholder="Senha" />
-          </Password>
-          <Forgot>
-            <span>esqueceu sua senha?</span>
-          </Forgot>
-          <Login>
+            <Link to="/">esqueceu sua senha?</Link>
+
             <ButtonPrimary type="submit">
               <span>Entrar</span>
             </ButtonPrimary>
-          </Login>
-        </Form>
-      </Content>
-      <ArrowRightBottom>
-        <div className="setup-two">
-          <span className="button-two">
-            <span className="head-two" />
-          </span>
-        </div>
-      </ArrowRightBottom>
-    </Container>
+          </FormLogin>
+        </Container>
+      </ContainerWithBordes>
+    </Wrapper>
   );
 };
 export default SignIn;

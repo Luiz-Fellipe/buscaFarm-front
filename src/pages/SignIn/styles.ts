@@ -1,37 +1,23 @@
 import styled from 'styled-components';
+import { Form } from '@unform/web';
 import colors from '~/styles/colors';
 
 export const Container = styled.div`
   display: flex;
-  justify-content: center;
-  padding: 40px 120px;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  margin: 10px;
 `;
 
-export const ArrowLeftTop = styled.div`
-  .button,
-  .head {
-    display: block;
-    background: ${colors.primary};
-    transition: all 0.3s ease;
-  }
-  .head {
-    height: 100px;
-    width: 20px;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-  .button {
-    height: 20px;
-    width: 100px;
-    position: relative;
-  }
-
-  .setup {
-    margin-top: 10px;
-    width: 15px;
-    height: 125px;
-  }
+export const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 `;
 
 export const Content = styled.div`
@@ -44,73 +30,20 @@ export const Content = styled.div`
 
 export const Logo = styled.div`
   display: flex;
-  margin-top: 10px;
   justify-content: center;
 `;
 
-export const User = styled.div`
+export const FormLogin = styled(Form)`
   display: flex;
-  justify-content: center;
-  margin-top: 120px;
-`;
+  width: 100%;
+  height: 70%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
 
-export const Password = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 70px;
-`;
-
-export const Forgot = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 90px;
-
-  span {
+  > a {
+    text-decoration: none;
     color: ${colors.primary};
-    font-size: 18px;
     font-weight: bold;
-    text-align: center;
-    line-height: 16px;
-  }
-`;
-
-export const Login = styled.div`
-  display: flex;
-  position: relative;
-
-  span {
-    font-family: Raleway;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 23px;
-    color: #fff;
-  }
-`;
-
-export const ArrowRightBottom = styled.div`
-  .button-two,
-  .head-two {
-    display: block;
-    background: ${colors.primary};
-    transition: all 0.3s ease;
-  }
-  .head-two {
-    height: 100px;
-    width: 20px;
-    position: absolute;
-    bottom: 0;
-    right: 0px;
-  }
-  .button-two {
-    height: 20px;
-    width: 100px;
-    position: relative;
-  }
-
-  .setup-two {
-    margin: 630px -80px;
-    width: 125px;
-    height: 41px;
   }
 `;
