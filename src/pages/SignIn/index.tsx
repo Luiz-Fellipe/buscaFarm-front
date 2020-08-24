@@ -1,24 +1,14 @@
 import React, { useCallback, useRef } from 'react';
 import { FiLock, FiUser } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
-import { Form } from '@unform/web';
 import * as Yup from 'yup';
+import { Link } from 'react-router-dom';
 import getValidationErrors from '../../utils/getValidationsErrors';
 import LogoBF from '~/assets/images/Logo.png';
-
-import {
-  Container,
-  Content,
-  Logo,
-  User,
-  Password,
-  Forgot,
-  Login,
-  ArrowLeftTop,
-  ArrowRightBottom,
-} from './styles';
+import { Container, Logo, FormLogin, Wrapper } from './styles';
 import Input from '~/components/Input';
 import { ButtonPrimary } from '~/components/Button/styles';
+import ContainerWithBordes from '~/components/ContainerWithBordes';
 
 interface Request {
   user: string;
@@ -29,7 +19,6 @@ const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit = useCallback(async (data: Request) => {
-    console.log(data);
     try {
       formRef.current?.setErrors({});
 
@@ -50,43 +39,31 @@ const SignIn: React.FC = () => {
   }, []);
 
   return (
-    <Container>
-      <ArrowLeftTop>
-        <div className="setup">
-          <span className="button">
-            <span className="head" />
-          </span>
-        </div>
-      </ArrowLeftTop>
-      <Content>
-        <Logo>
-          <img src={LogoBF} alt="" />
-        </Logo>
-        <Form ref={formRef} onSubmit={handleSubmit}>
-          <User>
+    <Wrapper>
+      <ContainerWithBordes
+        widthPercent="30"
+        heightPercent="60"
+        borderHeightPx="100"
+        borderWidthPx="7"
+      >
+        <Container>
+          <Logo>
+            <img src={LogoBF} alt="" />
+          </Logo>
+
+          <FormLogin ref={formRef} onSubmit={handleSubmit}>
             <Input name="user" icon={FiUser} placeholder="Usuário" />
-          </User>
-          <Password>
+
             <Input name="password" icon={FiLock} placeholder="Senha" />
-          </Password>
-          <Forgot>
-            <span>esqueceu sua senha?</span>
-          </Forgot>
-          <Login>
+            <Link to="/">esqueceu sua senha?</Link>
+
             <ButtonPrimary type="submit">
               <span>Entrar</span>
             </ButtonPrimary>
-          </Login>
-        </Form>
-      </Content>
-      <ArrowRightBottom>
-        <div className="setup-two">
-          <span className="button-two">
-            <span className="head-two" />
-          </span>
-        </div>
-      </ArrowRightBottom>
-    </Container>
+          </FormLogin>
+        </Container>
+      </ContainerWithBordes>
+    </Wrapper>
   );
 };
 export default SignIn;
