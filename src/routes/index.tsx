@@ -8,7 +8,7 @@ import Budgets from '~/pages/Budgets';
 
 const Routes: React.FC = () => (
   <Switch>
-    <Route path="/" exact component={SignIn} />
+    <Route path="/login" exact component={SignIn} />
     <Route path="/medicamentos" component={ManageMedicines} />
     <Route path="/funcionarios" component={Employees} />
     <Route path="/orçamentos" component={Budgets} />
