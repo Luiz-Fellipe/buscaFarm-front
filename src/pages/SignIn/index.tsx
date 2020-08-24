@@ -1,8 +1,10 @@
-import React from 'react';
-import { FiMail, FiLock } from 'react-icons/fi';
+import React, { useCallback, useRef } from 'react';
+import { FiLock, FiUser } from 'react-icons/fi';
+import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
+import getValidationErrors from '../../utils/getValidationsErrors';
 import LogoBF from '~/assets/images/Logo.png';
-
 import { Container, Logo, FormLogin, Wrapper } from './styles';
 import Input from '~/components/Input';
 import { ButtonPrimary } from '~/components/Button/styles';
@@ -14,9 +16,27 @@ interface Request {
 }
 
 const SignIn: React.FC = () => {
-  function handleSubmit(data: Request): void {
-    console.log(data);
-  }
+  const formRef = useRef<FormHandles>(null);
+
+  const handleSubmit = useCallback(async (data: Request) => {
+    try {
+      formRef.current?.setErrors({});
+
+      const schema = Yup.object().shape({
+        user: Yup.string().required('Usuário obrigatório'),
+        email: Yup.string()
+          .required('Email obrigatório')
+          .email('Digite um e-mail válido'),
+        password: Yup.string().min(6, 'Senha de no mínimo 6 dígitos'),
+      });
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+    } catch (err) {
+      const errors = getValidationErrors(err);
+      formRef.current?.setErrors(errors);
+    }
+  }, []);
 
   return (
     <Wrapper>
@@ -31,8 +51,8 @@ const SignIn: React.FC = () => {
             <img src={LogoBF} alt="" />
           </Logo>
 
-          <FormLogin onSubmit={handleSubmit}>
-            <Input name="user" icon={FiMail} placeholder="Usuário" />
+          <FormLogin ref={formRef} onSubmit={handleSubmit}>
+            <Input name="user" icon={FiUser} placeholder="Usuário" />
 
             <Input name="password" icon={FiLock} placeholder="Senha" />
             <Link to="/">esqueceu sua senha?</Link>
