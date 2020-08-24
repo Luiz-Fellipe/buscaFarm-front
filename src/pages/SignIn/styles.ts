@@ -51,7 +51,7 @@ export const Logo = styled.div`
 export const User = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 120px;
+  margin-top: 100px;
 `;
 
 export const Password = styled.div`
