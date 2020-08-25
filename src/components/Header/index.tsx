@@ -5,6 +5,7 @@ import LogoBF from '~/assets/images/Logo.png';
 import User from '~/assets/images/ImageProfile.png';
 import Notifications from '~/assets/images/IconNotifications.png';
 import Logout from '~/assets/images/IconLogout.png';
+import { useAuth } from '~/context/AuthContext';
 
 import {
   HeaderApplication,
@@ -15,6 +16,7 @@ import {
 } from './styles';
 
 const Header: React.FC = () => {
+  const { signOut } = useAuth();
   return (
     <HeaderApplication>
       <Logo>
@@ -27,7 +29,7 @@ const Header: React.FC = () => {
           MEDICAMENTOS
         </NavLink>
         <NavLink to="/funcionarios">FUNCIONÁRIOS</NavLink>
-        <NavLink to="/orçamentos">ORÇAMENTOS</NavLink>
+        <NavLink to="/orcamentos">ORÇAMENTOS</NavLink>
       </Navigation>
       <NameProfile>
         <div>
@@ -40,9 +42,9 @@ const Header: React.FC = () => {
       </NameProfile>
       <NotificationsAndLogout>
         <img src={Notifications} alt="" />
-        <NavLink to="/login">
+        <button type="button" onClick={signOut}>
           <img src={Logout} alt="" />
-        </NavLink>
+        </button>
       </NotificationsAndLogout>
     </HeaderApplication>
   );
