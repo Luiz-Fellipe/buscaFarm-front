@@ -1,10 +1,11 @@
 import React from 'react';
 
 import { NavLink } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt, faBell } from '@fortawesome/free-solid-svg-icons';
 import LogoBF from '~/assets/images/Logo.png';
 import User from '~/assets/images/ImageProfile.png';
-import Notifications from '~/assets/images/IconNotifications.png';
-import Logout from '~/assets/images/IconLogout.png';
+
 import { useAuth } from '~/context/AuthContext';
 
 import {
@@ -16,7 +17,7 @@ import {
 } from './styles';
 
 const Header: React.FC = () => {
-  const { signOut } = useAuth();
+  const { signOut, employee } = useAuth();
   return (
     <HeaderApplication>
       <Logo>
@@ -33,17 +34,19 @@ const Header: React.FC = () => {
       </Navigation>
       <NameProfile>
         <div>
-          <h5>Luiz Fellipe Da Silva</h5>
-          <span>Administrador</span>
+          <h5>{employee.user.name}</h5>
+          <span>{employee.employee_position.name}</span>
         </div>
         <div>
           <img src={User} alt="" />
         </div>
       </NameProfile>
       <NotificationsAndLogout>
-        <img src={Notifications} alt="" />
+        <button type="button">
+          <FontAwesomeIcon icon={faBell} />
+        </button>
         <button type="button" onClick={signOut}>
-          <img src={Logout} alt="" />
+          <FontAwesomeIcon icon={faSignOutAlt} />
         </button>
       </NotificationsAndLogout>
     </HeaderApplication>

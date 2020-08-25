@@ -1,9 +1,22 @@
 import React, { createContext, useCallback, useState, useContext } from 'react';
 import api from '../services/api';
 
+interface User {
+  name: string;
+}
+
+interface EmployeePosition {
+  name: string;
+}
+
+interface Employee {
+  user: User;
+  employee_position: EmployeePosition;
+}
+
 interface AuthState {
   token: string;
-  employee: object;
+  employee: Employee;
   pharmacie: object;
 }
 
@@ -13,15 +26,17 @@ interface SignInCredentials {
 }
 
 interface AuthContextData {
-  employee: object;
+  employee: Employee;
   pharmacie: object;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<AuthState>(() => {
     const token = localStorage.getItem('@BuscaFarm:token');
     const pharmacie = localStorage.getItem('@BuscaFarm:pharmacie');
@@ -38,17 +53,27 @@ const AuthProvider: React.FC = ({ children }) => {
   });
 
   const signIn = useCallback(async ({ email, password }) => {
-    const response = await api.post('sessions/employees', { email, password });
-    const { token, employee } = response.data;
-    setData({ token, employee, pharmacie: employee.pharmacie });
+    try {
+      setLoading(true);
 
-    localStorage.setItem('@BuscaFarm:token', token);
-    localStorage.setItem(
-      '@BuscaFarm:pharmacie',
-      JSON.stringify(employee.pharmacie),
-    );
-    delete employee.pharmacie;
-    localStorage.setItem('@BuscaFarm:employee', JSON.stringify(employee));
+      const response = await api.post('sessions/employees', {
+        email,
+        password,
+      });
+      const { token, employee } = response.data;
+      setData({ token, employee, pharmacie: employee.pharmacie });
+
+      localStorage.setItem('@BuscaFarm:token', token);
+      localStorage.setItem(
+        '@BuscaFarm:pharmacie',
+        JSON.stringify(employee.pharmacie),
+      );
+      delete employee.pharmacie;
+      localStorage.setItem('@BuscaFarm:employee', JSON.stringify(employee));
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   }, []);
 
   const signOut = useCallback(() => {
@@ -65,6 +90,7 @@ const AuthProvider: React.FC = ({ children }) => {
         pharmacie: data.pharmacie,
         signIn,
         signOut,
+        loading,
       }}
     >
       {children}

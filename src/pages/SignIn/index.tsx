@@ -1,8 +1,10 @@
 import React, { useCallback, useRef } from 'react';
-import { FiLock, FiUser } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faLock, faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 import getValidationErrors from '../../utils/getValidationsErrors';
 import LogoBF from '~/assets/images/Logo.png';
 import { Container, Logo, FormLogin, Wrapper } from './styles';
@@ -19,8 +21,8 @@ interface Request {
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const history = useHistory();
-  const { signIn } = useAuth();
+
+  const { signIn, loading } = useAuth();
 
   const handleSubmit = useCallback(
     async (data: Request) => {
@@ -39,13 +41,12 @@ const SignIn: React.FC = () => {
         });
 
         signIn({ email: data.email, password: data.password });
-        history.push('/medicamentos');
       } catch (err) {
         const errors = getValidationErrors(err);
         formRef.current?.setErrors(errors);
       }
     },
-    [signIn, history],
+    [signIn],
   );
 
   return (
@@ -54,7 +55,7 @@ const SignIn: React.FC = () => {
         widthPercent="30"
         heightPercent="60"
         borderHeightPx="100"
-        borderWidthPx="7"
+        borderWidthPx="13"
       >
         <Container>
           <Logo>
@@ -65,20 +66,25 @@ const SignIn: React.FC = () => {
             <Input
               name="email"
               type="email"
-              icon={FiUser}
+              icon={faUser}
               placeholder="Usuário"
             />
 
             <Input
               name="password"
               type="password"
-              icon={FiLock}
+              icon={faLock}
               placeholder="Senha"
             />
+
             <Link to="/">esqueceu sua senha?</Link>
 
             <ButtonPrimary type="submit">
-              <span>Entrar</span>
+              {loading ? (
+                <FontAwesomeIcon icon={faSpinner} spin />
+              ) : (
+                <span>Entrar</span>
+              )}
             </ButtonPrimary>
           </FormLogin>
         </Container>
