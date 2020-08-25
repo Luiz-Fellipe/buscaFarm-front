@@ -7,7 +7,7 @@ import Header from './components/Header';
 const App: React.FC = () => (
   <>
     <Router>
-      {/* <Header /> */}
+      <Header />
       <Routes />
       <GlobalStyle />
     </Router>

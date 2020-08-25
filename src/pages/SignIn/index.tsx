@@ -1,8 +1,8 @@
 import React, { useCallback, useRef } from 'react';
-import { FiLock, FiUser } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
+import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 import getValidationErrors from '../../utils/getValidationsErrors';
 import LogoBF from '~/assets/images/Logo.png';
 import { Container, Logo, FormLogin, Wrapper } from './styles';
@@ -44,7 +44,7 @@ const SignIn: React.FC = () => {
         widthPercent="30"
         heightPercent="60"
         borderHeightPx="100"
-        borderWidthPx="7"
+        borderWidthPx="13"
       >
         <Container>
           <Logo>
@@ -52,9 +52,9 @@ const SignIn: React.FC = () => {
           </Logo>
 
           <FormLogin ref={formRef} onSubmit={handleSubmit}>
-            <Input name="user" icon={FiUser} placeholder="Usuário" />
+            <Input name="user" icon={faUser} placeholder="Usuário" />
 
-            <Input name="password" icon={FiLock} placeholder="Senha" />
+            <Input name="password" icon={faLock} placeholder="Senha" />
             <Link to="/">esqueceu sua senha?</Link>
 
             <ButtonPrimary type="submit">
