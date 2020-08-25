@@ -7,7 +7,7 @@ export const HeaderApplication = styled.div`
   width: 100%;
   height: 90px;
   padding: 10px 0px;
-  background: #fffcfb;
+  background: white;
 `;
 
 export const Logo = styled.div`
@@ -94,10 +94,19 @@ export const NotificationsAndLogout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 20px;
 
-  img {
-    margin-right: 30px;
-    cursor: pointer;
+  > button {
+    margin: 0 10px;
+    background: none;
+    border: none;
+    > svg {
+      font-size: 18px;
+    }
+    &:hover {
+      > svg {
+        transition: all 0.2s;
+        color: ${colors.primary};
+      }
+    }
   }
 `;

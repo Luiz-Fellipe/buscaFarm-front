@@ -2,7 +2,9 @@ import React, { useCallback, useRef } from 'react';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
-import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faLock, faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 import getValidationErrors from '../../utils/getValidationsErrors';
 import LogoBF from '~/assets/images/Logo.png';
 import { Container, Logo, FormLogin, Wrapper } from './styles';
@@ -10,33 +12,42 @@ import Input from '~/components/Input';
 import { ButtonPrimary } from '~/components/Button/styles';
 import ContainerWithBordes from '~/components/ContainerWithBordes';
 
+import { useAuth } from '~/context/AuthContext';
+
 interface Request {
-  user: string;
+  email: string;
   password: string;
 }
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = useCallback(async (data: Request) => {
-    try {
-      formRef.current?.setErrors({});
+  const { signIn, loading } = useAuth();
 
-      const schema = Yup.object().shape({
-        user: Yup.string().required('Usuário obrigatório'),
-        email: Yup.string()
-          .required('Email obrigatório')
-          .email('Digite um e-mail válido'),
-        password: Yup.string().min(6, 'Senha de no mínimo 6 dígitos'),
-      });
-      await schema.validate(data, {
-        abortEarly: false,
-      });
-    } catch (err) {
-      const errors = getValidationErrors(err);
-      formRef.current?.setErrors(errors);
-    }
-  }, []);
+  const handleSubmit = useCallback(
+    async (data: Request) => {
+      try {
+        formRef.current?.setErrors({});
+
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .required('Email obrigatório')
+            .email('Digite um e-mail válido'),
+          password: Yup.string().min(6, 'Senha de no mínimo 6 dígitos'),
+        });
+
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        signIn({ email: data.email, password: data.password });
+      } catch (err) {
+        const errors = getValidationErrors(err);
+        formRef.current?.setErrors(errors);
+      }
+    },
+    [signIn],
+  );
 
   return (
     <Wrapper>
@@ -52,13 +63,28 @@ const SignIn: React.FC = () => {
           </Logo>
 
           <FormLogin ref={formRef} onSubmit={handleSubmit}>
-            <Input name="user" icon={faUser} placeholder="Usuário" />
+            <Input
+              name="email"
+              type="email"
+              icon={faUser}
+              placeholder="Usuário"
+            />
 
-            <Input name="password" icon={faLock} placeholder="Senha" />
+            <Input
+              name="password"
+              type="password"
+              icon={faLock}
+              placeholder="Senha"
+            />
+
             <Link to="/">esqueceu sua senha?</Link>
 
             <ButtonPrimary type="submit">
-              <span>Entrar</span>
+              {loading ? (
+                <FontAwesomeIcon icon={faSpinner} spin />
+              ) : (
+                <span>Entrar</span>
+              )}
             </ButtonPrimary>
           </FormLogin>
         </Container>
