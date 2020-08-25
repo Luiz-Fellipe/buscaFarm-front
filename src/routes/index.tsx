@@ -5,6 +5,7 @@ import SignIn from '~/pages/SignIn';
 import ManageMedicines from '~/pages/ManageMedicines';
 import Employees from '~/pages/Employees';
 import Budgets from '~/pages/Budgets';
+import EmployeeRegistration from '~/pages/EmployeeRegistration';
 
 const Routes: React.FC = () => (
   <Switch>
@@ -12,6 +13,7 @@ const Routes: React.FC = () => (
     <Route path="/medicamentos" component={ManageMedicines} />
     <Route path="/funcionarios" component={Employees} />
     <Route path="/orçamentos" component={Budgets} />
+    <Route path="/cadastro-de-funcionarios" component={EmployeeRegistration} />
   </Switch>
 );
 

@@ -1,18 +1,18 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { IconBaseProps } from 'react-icons';
 import { useField } from '@unform/core';
-
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { InputWrapper, Wrapper } from './styles';
 
 interface Props {
   name: string;
   label?: string;
-  icon: React.ComponentType<IconBaseProps>;
+  icon: IconProp;
 }
 
 type InputProps = JSX.IntrinsicElements['input'] & Props;
 
-const Input: React.FC<InputProps> = ({ name, label, icon: Icon, ...rest }) => {
+const Input: React.FC<InputProps> = ({ name, label, icon, ...rest }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
@@ -39,7 +39,7 @@ const Input: React.FC<InputProps> = ({ name, label, icon: Icon, ...rest }) => {
     <Wrapper>
       <InputWrapper isFilled={isFilled} isFocused={isFocused} error={error}>
         {label && <label htmlFor={fieldName}>{label}</label>}
-        {Icon && <Icon size={20} />}
+        {icon && <FontAwesomeIcon icon={icon} />}
         <input
           onFocus={HandleInputFocus}
           onBlur={handleInputBlur}
