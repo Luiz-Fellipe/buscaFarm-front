@@ -1,12 +1,27 @@
 import React from 'react';
 
-import { Wrapper } from './styles';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { Wrapper, Header, Title, Functionalities, ButtonAdd } from './styles';
 
 import Table from '~/components/global/Table';
+import InputSearch from '~/components/global/InputSearch';
 
 const Employees: React.FC = () => {
   return (
     <Wrapper>
+      <Header>
+        <Title>
+          <span>Gerenciar Funcionários</span>
+        </Title>
+        <Functionalities>
+          <InputSearch icon={faSearch} placeholder="Buscar Por Funcionários" />
+          <ButtonAdd>
+            <FontAwesomeIcon icon={faPlusCircle} />
+            <span>Cadastrar</span>
+          </ButtonAdd>
+        </Functionalities>
+      </Header>
       <Table titles={['NOME', 'EMAIL', 'CARGO', 'AÇÕES']}>
         <tr>
           <td>Samuel Xavier</td>
