@@ -1,5 +1,10 @@
 import React, { useCallback, useState, useEffect, memo } from 'react';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faChevronLeft,
+  faChevronRight,
+} from '@fortawesome/free-solid-svg-icons';
 import { Wrapper, ButtonNextPrev, ButtonPage } from './styles';
 
 interface PaginationProps {
@@ -30,6 +35,7 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <Wrapper>
       <ButtonNextPrev type="button" disabled={page === 1}>
+        <FontAwesomeIcon icon={faChevronLeft} />
         Anterior
       </ButtonNextPrev>
       {pagesJSX.map(pageNumber => (
@@ -43,6 +49,7 @@ const Pagination: React.FC<PaginationProps> = ({
       ))}
       <ButtonNextPrev type="button" disabled={page === totalPages}>
         Próximo
+        <FontAwesomeIcon icon={faChevronRight} />
       </ButtonNextPrev>
     </Wrapper>
   );

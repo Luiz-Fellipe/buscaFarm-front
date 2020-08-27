@@ -1,13 +1,59 @@
 import React from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { Wrapper, Header, Title, Functionalities, ButtonAdd } from './styles';
+import {
+  faPlusCircle,
+  faSearch,
+  faPencilAlt,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2';
+import exclamationSvg from '~/assets/icons/exclamation-mark.svg';
+import tickSvg from '~/assets/icons/tick.svg';
+
+import {
+  Wrapper,
+  Header,
+  Title,
+  Functionalities,
+  ButtonAdd,
+  Input,
+  ButtonEdit,
+  ButtonDelete,
+} from './styles';
 
 import Table from '~/components/global/Table';
 import InputSearch from '~/components/global/InputSearch';
+import colors from '~/styles/colors';
+import { AindaSwal } from '~/components/global/AindaSwal';
 
 const Employees: React.FC = () => {
+  function handleDelete() {
+    AindaSwal.fire({
+      title: 'Tem certeza de que deseja excluir este funcionário?',
+      text: 'Você não será capaz de reverter isso!',
+      imageUrl: exclamationSvg,
+      showCloseButton: true,
+      confirmButtonColor: `${colors.primary}`,
+      confirmButtonText: 'Sim, Deletar!',
+      focusConfirm: false,
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      focusCancel: false,
+      reverseButtons: true,
+    }).then(result => {
+      if (result.value) {
+        Swal.fire({
+          title: 'Deletado!',
+          text: 'Funcionário deletado com sucesso.',
+          imageUrl: tickSvg,
+          confirmButtonText: 'Ok',
+          confirmButtonColor: `${colors.primary}`,
+        });
+      }
+    });
+  }
+
   return (
     <Wrapper>
       <Header>
@@ -15,11 +61,18 @@ const Employees: React.FC = () => {
           <span>Gerenciar Funcionários</span>
         </Title>
         <Functionalities>
-          <InputSearch icon={faSearch} placeholder="Buscar Por Funcionários" />
-          <ButtonAdd>
-            <FontAwesomeIcon icon={faPlusCircle} />
-            <span>Cadastrar</span>
-          </ButtonAdd>
+          <Input>
+            <InputSearch
+              icon={faSearch}
+              placeholder="Buscar Por Funcionários"
+            />
+          </Input>
+          <a href="/cadastro-de-funcionarios">
+            <ButtonAdd>
+              <FontAwesomeIcon icon={faPlusCircle} />
+              <span>CADASTRAR</span>
+            </ButtonAdd>
+          </a>
         </Functionalities>
       </Header>
       <Table titles={['NOME', 'EMAIL', 'CARGO', 'AÇÕES']}>
@@ -28,9 +81,12 @@ const Employees: React.FC = () => {
           <td>samuelxavier@gmail.com</td>
           <td>Vendedor</td>
           <td>
-            <button type="button">1</button>
-            <button type="button">2</button>
-            <button type="button">3</button>
+            <ButtonEdit type="button">
+              <FontAwesomeIcon icon={faPencilAlt} />
+            </ButtonEdit>
+            <ButtonDelete type="button">
+              <FontAwesomeIcon icon={faTrash} onClick={handleDelete} />
+            </ButtonDelete>
           </td>
         </tr>
         <tr>
@@ -38,9 +94,12 @@ const Employees: React.FC = () => {
           <td>samuelxavier@gmail.com</td>
           <td>Vendedor</td>
           <td>
-            <button type="button">1</button>
-            <button type="button">2</button>
-            <button type="button">3</button>
+            <ButtonEdit type="button">
+              <FontAwesomeIcon icon={faPencilAlt} />
+            </ButtonEdit>
+            <ButtonDelete type="button">
+              <FontAwesomeIcon icon={faTrash} />
+            </ButtonDelete>
           </td>
         </tr>
         <tr>
@@ -48,9 +107,12 @@ const Employees: React.FC = () => {
           <td>samuelxavier@gmail.com</td>
           <td>Vendedor</td>
           <td>
-            <button type="button">1</button>
-            <button type="button">2</button>
-            <button type="button">3</button>
+            <ButtonEdit type="button">
+              <FontAwesomeIcon icon={faPencilAlt} />
+            </ButtonEdit>
+            <ButtonDelete type="button">
+              <FontAwesomeIcon icon={faTrash} />
+            </ButtonDelete>
           </td>
         </tr>
         <tr>
@@ -58,9 +120,12 @@ const Employees: React.FC = () => {
           <td>samuelxavier@gmail.com</td>
           <td>Vendedor</td>
           <td>
-            <button type="button">1</button>
-            <button type="button">2</button>
-            <button type="button">3</button>
+            <ButtonEdit type="button">
+              <FontAwesomeIcon icon={faPencilAlt} />
+            </ButtonEdit>
+            <ButtonDelete type="button">
+              <FontAwesomeIcon icon={faTrash} />
+            </ButtonDelete>
           </td>
         </tr>
         <tr>
@@ -68,9 +133,12 @@ const Employees: React.FC = () => {
           <td>samuelxavier@gmail.com</td>
           <td>Vendedor</td>
           <td>
-            <button type="button">1</button>
-            <button type="button">2</button>
-            <button type="button">3</button>
+            <ButtonEdit type="button">
+              <FontAwesomeIcon icon={faPencilAlt} />
+            </ButtonEdit>
+            <ButtonDelete type="button">
+              <FontAwesomeIcon icon={faTrash} />
+            </ButtonDelete>
           </td>
         </tr>
         <tr>
@@ -78,9 +146,12 @@ const Employees: React.FC = () => {
           <td>samuelxavier@gmail.com</td>
           <td>Vendedor</td>
           <td>
-            <button type="button">1</button>
-            <button type="button">2</button>
-            <button type="button">3</button>
+            <ButtonEdit type="button">
+              <FontAwesomeIcon icon={faPencilAlt} />
+            </ButtonEdit>
+            <ButtonDelete type="button">
+              <FontAwesomeIcon icon={faTrash} />
+            </ButtonDelete>
           </td>
         </tr>
         <tr>
@@ -88,9 +159,12 @@ const Employees: React.FC = () => {
           <td>samuelxavier@gmail.com</td>
           <td>Vendedor</td>
           <td>
-            <button type="button">1</button>
-            <button type="button">2</button>
-            <button type="button">3</button>
+            <ButtonEdit type="button">
+              <FontAwesomeIcon icon={faPencilAlt} />
+            </ButtonEdit>
+            <ButtonDelete type="button">
+              <FontAwesomeIcon icon={faTrash} />
+            </ButtonDelete>
           </td>
         </tr>
         <tr>
@@ -98,9 +172,12 @@ const Employees: React.FC = () => {
           <td>samuelxavier@gmail.com</td>
           <td>Vendedor</td>
           <td>
-            <button type="button">1</button>
-            <button type="button">2</button>
-            <button type="button">3</button>
+            <ButtonEdit type="button">
+              <FontAwesomeIcon icon={faPencilAlt} />
+            </ButtonEdit>
+            <ButtonDelete type="button">
+              <FontAwesomeIcon icon={faTrash} />
+            </ButtonDelete>
           </td>
         </tr>
       </Table>

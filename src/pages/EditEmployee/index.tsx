@@ -42,8 +42,8 @@ const EmployeeRegistration: React.FC = () => {
           .required('Email obrigatório')
           .email('Digite um e-mail válido'),
         password: Yup.string().min(6, 'Senha de no mínimo 6 dígitos'),
-        confirmPassword: Yup.string().required('Declarar senha novamente'),
-        telephone: Yup.string().required('Informar número de usuário'),
+        confirmPassword: Yup.string().required('Declarar nova senha'),
+        telephone: Yup.string().required('Informar novo número de usuário'),
       });
       await schema.validate(data, {
         abortEarly: false,
@@ -58,7 +58,7 @@ const EmployeeRegistration: React.FC = () => {
       <Wrapper>
         <HeaderModal>
           <Title>
-            <span>Cadastro De Funcionário</span>
+            <span>Editar Dados do Funcionário</span>
           </Title>
           <a href="/funcionarios" style={{ textDecoration: 'none' }}>
             <ButtonBackAndSave>

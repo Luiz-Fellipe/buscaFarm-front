@@ -11,7 +11,7 @@ export const TableWrapper = styled.table`
   td,
   th {
     text-align: left;
-    padding: 8px;
+    padding: 8px 15px;
   }
 
   > tr {
