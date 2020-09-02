@@ -1,9 +1,8 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useEffect, useState } from 'react';
 
 import {
   faArrowLeft,
   faCheck,
-  faBriefcase,
   faUser,
   faEnvelope,
   faLock,
@@ -12,6 +11,7 @@ import {
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
+
 import {
   Wrapper,
   HeaderModal,
@@ -24,11 +24,25 @@ import {
 import ButtonPrimary from '~/components/global/ButtonPrimary';
 import ButtonSecondary from '~/components/global/ButtonSecondary';
 import ContainerWithBordes from '~/components/ContainerWithBordes';
-
+import api from '~/services/api';
 import Input from '~/components/Input';
+import AsyncSelect from '~/components/global/AsyncSelect';
+
 import getValidationErrors from '~/utils/getValidationsErrors';
 
+interface EmployeePositionProps {
+  id?: string;
+  name?: string;
+}
+
+interface OptionsProps {
+  value: EmployeePositionProps;
+  label: EmployeePositionProps;
+}
+
 const EmployeeRegistration: React.FC = () => {
+  const [employeePositions, setEmployeePositions] = useState<[]>([]);
+
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit = useCallback(async (data: Request) => {
@@ -53,6 +67,28 @@ const EmployeeRegistration: React.FC = () => {
       formRef.current?.setErrors(errors);
     }
   }, []);
+
+  const loadEmployeePositions = useCallback(async () => {
+    try {
+      const {
+        data: { employeesPosition },
+      } = await api.get('/employees/position');
+
+      const options = employeesPosition.map(
+        ({ id, name }: EmployeePositionProps) => ({
+          value: id,
+          label: name,
+        }),
+      );
+
+      setEmployeePositions(options);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    loadEmployeePositions();
+  }, [loadEmployeePositions]);
+
   return (
     <>
       <Wrapper>
@@ -84,7 +120,14 @@ const EmployeeRegistration: React.FC = () => {
             />
             <InputGroup>
               <Input name="email" icon={faEnvelope} placeholder="E-mail" />
-              <Input name="office" icon={faBriefcase} placeholder="Cargo" />
+              {/* <Input name="office" icon={faBriefcase} placeholder="Cargo" /> */}
+              <AsyncSelect
+                // defaultValue={employeePositions[0]}
+                isSearchable
+                name="employees-position"
+                options={employeePositions}
+                loadOptions={loadEmployeePositions}
+              />
               <Input name="password" icon={faLock} placeholder="Senha" />
               <Input
                 name="confirmPassword"

@@ -43,6 +43,8 @@ const AuthProvider: React.FC = ({ children }) => {
     const employee = localStorage.getItem('@BuscaFarm:employee');
 
     if (token && pharmacie && employee) {
+      api.defaults.headers.authorization = `Bearer ${token}`;
+
       return {
         token,
         employee: JSON.parse(employee),
@@ -70,6 +72,9 @@ const AuthProvider: React.FC = ({ children }) => {
       );
       delete employee.pharmacie;
       localStorage.setItem('@BuscaFarm:employee', JSON.stringify(employee));
+
+      api.defaults.headers.authorization = `Bearer ${token}`;
+
       setLoading(false);
     } catch (error) {
       setLoading(false);
