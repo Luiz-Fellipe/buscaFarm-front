@@ -10,14 +10,21 @@ interface TableProps {
 const Table: React.FC<TableProps> = ({ titles, children }) => {
   return (
     <TableWrapper>
-      <tr>
-        {titles.map(title => (
-          <th key={title}>{title}</th>
-        ))}
-      </tr>
-      {children}
+      <thead>
+        <tr>
+          {titles.map(title => (
+            <th key={title}>{title}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>{children}</tbody>
+
       <tfoot>
-        <Pagination page={1} totalPages={5} />
+        <tr>
+          <td>
+            <Pagination page={1} totalPages={5} />
+          </td>
+        </tr>
       </tfoot>
     </TableWrapper>
   );
