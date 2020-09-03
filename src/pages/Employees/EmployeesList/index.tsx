@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -25,9 +25,10 @@ import {
 import Table from '~/components/global/Table';
 import InputSearch from '~/components/global/InputSearch';
 import colors from '~/styles/colors';
+import api from '~/services/api';
 import { AindaSwal } from '~/components/global/AindaSwal';
 
-const Employees: React.FC = () => {
+const EmployeesList: React.FC = () => {
   function handleDelete() {
     AindaSwal.fire({
       title: 'Tem certeza de que deseja excluir este funcionário?',
@@ -53,6 +54,18 @@ const Employees: React.FC = () => {
       }
     });
   }
+
+  const loadEmployees = useCallback(async () => {
+    try {
+      const response = await api.get('/employees');
+
+      console.log(response);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    loadEmployees();
+  }, [loadEmployees]);
 
   return (
     <Wrapper>
@@ -185,4 +198,4 @@ const Employees: React.FC = () => {
   );
 };
 
-export default Employees;
+export default EmployeesList;

@@ -28,7 +28,7 @@ import ContainerWithBordes from '~/components/ContainerWithBordes';
 import Input from '~/components/Input';
 import getValidationErrors from '~/utils/getValidationsErrors';
 
-const EmployeeRegistration: React.FC = () => {
+const EmployeeEdit: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit = useCallback(async (data: Request) => {
@@ -105,4 +105,4 @@ const EmployeeRegistration: React.FC = () => {
   );
 };
 
-export default EmployeeRegistration;
+export default EmployeeEdit;
