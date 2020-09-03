@@ -34,6 +34,7 @@ interface EmployeePositionProps {
 interface UserProps {
   name: string;
   email: string;
+  id: string;
 }
 interface EmployeerProps {
   id: string;
@@ -57,15 +58,41 @@ const EmployeesList: React.FC = () => {
       cancelButtonText: 'Cancelar',
       focusCancel: false,
       reverseButtons: true,
-    }).then(result => {
-      if (result.value) {
-        Swal.fire({
-          title: 'Deletado!',
-          text: 'Funcionário deletado com sucesso.',
-          imageUrl: tickSvg,
-          confirmButtonText: 'Ok',
-          confirmButtonColor: `${colors.primary}`,
-        });
+    }).then(async action => {
+      if (action.value) {
+        api
+          .delete(`/employees/delete/${id}`)
+
+          .then((res: any) => {
+            if (res.status === 204) {
+              const findId = employeesOrganization.findIndex(
+                (user: UserProps) => user.id === id,
+              );
+
+              employeesOrganization.splice(findId, 1);
+
+              Swal.fire({
+                title: 'Deletado!',
+                text: 'Funcionário deletado com sucesso.',
+                imageUrl: tickSvg,
+                confirmButtonText: 'Ok',
+                confirmButtonColor: `${colors.primary}`,
+              });
+            } else {
+              AindaSwal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong. Try again later...',
+              });
+            }
+          })
+          .catch(() => {
+            AindaSwal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong. Try again later...',
+            });
+          });
       }
     });
   }
@@ -74,7 +101,6 @@ const EmployeesList: React.FC = () => {
     try {
       const response = await api.get('/employees');
       setEmployeesOrganization(response.data.employees);
-      console.log('salve', response.data.employees);
     } catch {}
   }, []);
 
@@ -104,24 +130,25 @@ const EmployeesList: React.FC = () => {
         </Functionalities>
       </Header>
       <Table titles={['NOME', 'EMAIL', 'CARGO', 'AÇÕES']}>
-        {employeesOrganization.map(
-          ({ id, user, employee_position }: EmployeerProps) => (
-            <tr key={id}>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{employee_position.name}</td>
+        {employeesOrganization.map((employee: EmployeerProps) => (
+          <tr key={employee.id}>
+            <td>{employee.user.name}</td>
+            <td>{employee.user.email}</td>
+            <td>{employee.employee_position.name}</td>
+            <td>
               <ButtonEdit type="button">
                 <FontAwesomeIcon icon={faPencilAlt} />
               </ButtonEdit>
+
               <ButtonDelete type="button">
                 <FontAwesomeIcon
                   icon={faTrash}
-                  onClick={() => handleDelete(id)}
+                  onClick={() => handleDelete(employee.user.id)}
                 />
               </ButtonDelete>
-            </tr>
-          ),
-        )}
+            </td>
+          </tr>
+        ))}
       </Table>
     </Wrapper>
   );
