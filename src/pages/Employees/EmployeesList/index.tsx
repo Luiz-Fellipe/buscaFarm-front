@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -28,8 +28,23 @@ import colors from '~/styles/colors';
 import api from '~/services/api';
 import { AindaSwal } from '~/components/global/AindaSwal';
 
+interface EmployeePositionProps {
+  name: string;
+}
+interface UserProps {
+  name: string;
+  email: string;
+}
+interface EmployeerProps {
+  id: string;
+  user: UserProps;
+  employee_position: EmployeePositionProps;
+}
+
 const EmployeesList: React.FC = () => {
-  function handleDelete() {
+  const [employeesOrganization, setEmployeesOrganization] = useState<[]>([]);
+
+  function handleDelete(id: string) {
     AindaSwal.fire({
       title: 'Tem certeza de que deseja excluir este funcionário?',
       text: 'Você não será capaz de reverter isso!',
@@ -58,8 +73,8 @@ const EmployeesList: React.FC = () => {
   const loadEmployees = useCallback(async () => {
     try {
       const response = await api.get('/employees');
-
-      console.log(response);
+      setEmployeesOrganization(response.data.employees);
+      console.log('salve', response.data.employees);
     } catch {}
   }, []);
 
@@ -89,110 +104,24 @@ const EmployeesList: React.FC = () => {
         </Functionalities>
       </Header>
       <Table titles={['NOME', 'EMAIL', 'CARGO', 'AÇÕES']}>
-        <tr>
-          <td>Samuel Xavier</td>
-          <td>samuelxavier@gmail.com</td>
-          <td>Vendedor</td>
-          <td>
-            <ButtonEdit type="button">
-              <FontAwesomeIcon icon={faPencilAlt} />
-            </ButtonEdit>
-            <ButtonDelete type="button">
-              <FontAwesomeIcon icon={faTrash} onClick={handleDelete} />
-            </ButtonDelete>
-          </td>
-        </tr>
-        <tr>
-          <td>Samuel Xavier</td>
-          <td>samuelxavier@gmail.com</td>
-          <td>Vendedor</td>
-          <td>
-            <ButtonEdit type="button">
-              <FontAwesomeIcon icon={faPencilAlt} />
-            </ButtonEdit>
-            <ButtonDelete type="button">
-              <FontAwesomeIcon icon={faTrash} />
-            </ButtonDelete>
-          </td>
-        </tr>
-        <tr>
-          <td>Samuel Xavier</td>
-          <td>samuelxavier@gmail.com</td>
-          <td>Vendedor</td>
-          <td>
-            <ButtonEdit type="button">
-              <FontAwesomeIcon icon={faPencilAlt} />
-            </ButtonEdit>
-            <ButtonDelete type="button">
-              <FontAwesomeIcon icon={faTrash} />
-            </ButtonDelete>
-          </td>
-        </tr>
-        <tr>
-          <td>Samuel Xavier</td>
-          <td>samuelxavier@gmail.com</td>
-          <td>Vendedor</td>
-          <td>
-            <ButtonEdit type="button">
-              <FontAwesomeIcon icon={faPencilAlt} />
-            </ButtonEdit>
-            <ButtonDelete type="button">
-              <FontAwesomeIcon icon={faTrash} />
-            </ButtonDelete>
-          </td>
-        </tr>
-        <tr>
-          <td>Samuel Xavier</td>
-          <td>samuelxavier@gmail.com</td>
-          <td>Vendedor</td>
-          <td>
-            <ButtonEdit type="button">
-              <FontAwesomeIcon icon={faPencilAlt} />
-            </ButtonEdit>
-            <ButtonDelete type="button">
-              <FontAwesomeIcon icon={faTrash} />
-            </ButtonDelete>
-          </td>
-        </tr>
-        <tr>
-          <td>Samuel Xavier</td>
-          <td>samuelxavier@gmail.com</td>
-          <td>Vendedor</td>
-          <td>
-            <ButtonEdit type="button">
-              <FontAwesomeIcon icon={faPencilAlt} />
-            </ButtonEdit>
-            <ButtonDelete type="button">
-              <FontAwesomeIcon icon={faTrash} />
-            </ButtonDelete>
-          </td>
-        </tr>
-        <tr>
-          <td>Samuel Xavier</td>
-          <td>samuelxavier@gmail.com</td>
-          <td>Vendedor</td>
-          <td>
-            <ButtonEdit type="button">
-              <FontAwesomeIcon icon={faPencilAlt} />
-            </ButtonEdit>
-            <ButtonDelete type="button">
-              <FontAwesomeIcon icon={faTrash} />
-            </ButtonDelete>
-          </td>
-        </tr>
-        <tr>
-          <td>Samuel Xavier</td>
-          <td>samuelxavier@gmail.com</td>
-          <td>Vendedor</td>
-          <td>
-            <ButtonEdit type="button">
-              <FontAwesomeIcon icon={faPencilAlt} />
-            </ButtonEdit>
-            <ButtonDelete type="button">
-              <FontAwesomeIcon icon={faTrash} />
-            </ButtonDelete>
-          </td>
-        </tr>
+        {employeesOrganization.map(
+          ({ id, user, employee_position }: EmployeerProps) => (
+            <tr key={id}>
+              <td>{user.name}</td>
+              <td>{user.email}</td>
+              <td>{employee_position.name}</td>
+              <ButtonEdit type="button">
+                <FontAwesomeIcon icon={faPencilAlt} />
+              </ButtonEdit>
+              <ButtonDelete type="button">
+                <FontAwesomeIcon
+                  icon={faTrash}
+                  onClick={() => handleDelete(id)}
+                />
+              </ButtonDelete>
+            </tr>
+          ),
+        )}
       </Table>
     </Wrapper>
   );
