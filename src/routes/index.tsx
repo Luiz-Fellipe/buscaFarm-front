@@ -3,15 +3,15 @@ import { Switch } from 'react-router-dom';
 import Route from './Route';
 import SignIn from '~/pages/SignIn';
 import ManageMedicines from '~/pages/ManageMedicines';
-import Employees from '~/pages/Employees';
+import EmployeesList from '~/pages/Employees/EmployeesList';
 import Budgets from '~/pages/Budgets';
-import EmployeeRegistration from '~/pages/EmployeeRegistration';
+import EmployeeRegistration from '~/pages/Employees/EmployeeRegistration';
 
 const Routes: React.FC = () => (
   <Switch>
     <Route path="/" exact component={SignIn} />
     <Route path="/medicamentos" component={ManageMedicines} isPrivate />
-    <Route path="/funcionarios" component={Employees} isPrivate />
+    <Route path="/funcionarios" component={EmployeesList} isPrivate />
     <Route path="/orcamentos" component={Budgets} isPrivate />
     <Route
       path="/cadastro-de-funcionarios"
