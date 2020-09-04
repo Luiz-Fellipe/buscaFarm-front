@@ -3,6 +3,8 @@ export default {
 
   gray: '#979494',
 
+  grayLigth: '#d9d9d9',
+
   border: '#ECE2E1',
 
   black: '#000000',

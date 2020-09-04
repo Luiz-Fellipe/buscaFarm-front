@@ -5,7 +5,8 @@ export const Button = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 20px;
+  height: 40px;
+  width: 8%;
   background: ${colors.primary};
   color: ${colors.white};
   border: none;
