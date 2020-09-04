@@ -43,7 +43,7 @@ interface EmployeerProps {
 }
 
 const EmployeesList: React.FC = () => {
-  const [employeesOrganization, setEmployeesOrganization] = useState<[]>([]);
+  const [employeesOrganization, setEmployeesOrganization] = useState([]);
 
   function handleDelete(id: string) {
     AindaSwal.fire({
@@ -65,11 +65,11 @@ const EmployeesList: React.FC = () => {
 
           .then((res: any) => {
             if (res.status === 204) {
-              const findId = employeesOrganization.findIndex(
-                (user: UserProps) => user.id === id,
+              setEmployeesOrganization(
+                employeesOrganization.filter(
+                  (employeer: EmployeerProps) => employeer.user.id !== id,
+                ),
               );
-
-              employeesOrganization.splice(findId, 1);
 
               Swal.fire({
                 title: 'Deletado!',
