@@ -7,6 +7,7 @@ export const TableWrapper = styled.table`
   background: ${colors.white};
   border-spacing: 0;
   border-radius: 4px;
+  margin-bottom: 50px;
 
   td,
   th {
@@ -14,12 +15,14 @@ export const TableWrapper = styled.table`
     padding: 8px 15px;
   }
 
-  > tr {
-    line-height: 60px;
-  }
+  tbody {
+    > tr {
+      line-height: 60px;
+    }
 
-  > tr:nth-child(even) {
-    background-color: #eeeeee;
+    > tr:nth-child(even) {
+      background-color: #eeeeee;
+    }
   }
 
   tfoot {

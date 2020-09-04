@@ -1,5 +1,4 @@
 import React, { useCallback, useRef, useEffect, useState } from 'react';
-
 import {
   faArrowLeft,
   faCheck,
@@ -10,7 +9,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
+import { useHistory } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
+import Swal from 'sweetalert2';
+import colors from '~/styles/colors';
 
 import {
   Wrapper,
@@ -26,8 +28,8 @@ import ButtonSecondary from '~/components/global/ButtonSecondary';
 import ContainerWithBordes from '~/components/ContainerWithBordes';
 import api from '~/services/api';
 import Input from '~/components/Input';
-import AsyncSelect from '~/components/global/AsyncSelect';
-
+import SimpleSelect from '~/components/global/SimpleSelect';
+import { useAuth } from '~/context/AuthContext';
 import getValidationErrors from '~/utils/getValidationsErrors';
 
 interface EmployeePositionProps {
@@ -41,32 +43,69 @@ interface OptionsProps {
 }
 
 const EmployeeRegistration: React.FC = () => {
-  const [employeePositions, setEmployeePositions] = useState<[]>([]);
+  const history = useHistory();
+  const { pharmacie }: { pharmacie: any } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [employeePositions, setEmployeePositions] = useState<[{}]>([{}]);
 
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = useCallback(async (data: Request) => {
-    try {
-      formRef.current?.setErrors({});
+  const handleSubmit = useCallback(
+    async (data: Request) => {
+      try {
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Nome do Funcionário Obrigatório'),
-        office: Yup.string().required('Nome do Cargo Obrigatório'),
-        email: Yup.string()
-          .required('Email obrigatório')
-          .email('Digite um e-mail válido'),
-        password: Yup.string().min(6, 'Senha de no mínimo 6 dígitos'),
-        confirmPassword: Yup.string().required('Declarar senha novamente'),
-        telephone: Yup.string().required('Informar número de usuário'),
-      });
-      await schema.validate(data, {
-        abortEarly: false,
-      });
-    } catch (err) {
-      const errors = getValidationErrors(err);
-      formRef.current?.setErrors(errors);
-    }
-  }, []);
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Nome do Funcionário Obrigatório'),
+          employee_position_id: Yup.string().required(
+            'Nome do Cargo Obrigatório',
+          ),
+          email: Yup.string()
+            .required('Email obrigatório')
+            .email('Digite um e-mail válido'),
+          password: Yup.string().min(6, 'Senha de no mínimo 6 dígitos'),
+          confirmPassword: Yup.string()
+            .required('O Confirmar senha é obrigatório')
+            .oneOf([Yup.ref('password')], 'As senhas não batem'),
+          phone: Yup.string().required('Informar número de usuário'),
+        });
+
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        setLoading(true);
+        await api.post('/employees/create', {
+          ...data,
+          pharmacie_id: pharmacie.id,
+        });
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Sucesso !',
+          text: 'Usuário cadastrado com sucesso',
+          confirmButtonText: 'Ok',
+          confirmButtonColor: `${colors.primary}`,
+        });
+
+        setLoading(false);
+        history.push('/funcionarios');
+      } catch (err) {
+        const errors = getValidationErrors(err);
+        formRef.current?.setErrors(errors);
+        setLoading(false);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro !',
+          text:
+            'Não foi possivel cadastrar o funcionário. tente novamente mais tarde',
+          confirmButtonText: 'Ok',
+          confirmButtonColor: `${colors.primary}`,
+        });
+      }
+    },
+    [pharmacie, history],
+  );
 
   const loadEmployeePositions = useCallback(async () => {
     try {
@@ -82,7 +121,15 @@ const EmployeeRegistration: React.FC = () => {
       );
 
       setEmployeePositions(options);
-    } catch {}
+    } catch (e) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro !',
+        text: 'Não foi possivel listar os cargos. tente novamente mais tarde',
+        confirmButtonText: 'Ok',
+        confirmButtonColor: `${colors.primary}`,
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -121,23 +168,29 @@ const EmployeeRegistration: React.FC = () => {
             <InputGroup>
               <Input name="email" icon={faEnvelope} placeholder="E-mail" />
               {/* <Input name="office" icon={faBriefcase} placeholder="Cargo" /> */}
-              <AsyncSelect
-                // defaultValue={employeePositions[0]}
-                isSearchable
-                name="employees-position"
+              <SimpleSelect
+                placeholder="Cargo"
+                defaultInputValue=""
+                fieldName="employee_position_id"
+                name="employee_position_id"
                 options={employeePositions}
-                loadOptions={loadEmployeePositions}
               />
-              <Input name="password" icon={faLock} placeholder="Senha" />
+              <Input
+                name="password"
+                type="password"
+                icon={faLock}
+                placeholder="Senha"
+              />
               <Input
                 name="confirmPassword"
+                type="password"
                 icon={faLock}
                 placeholder="Confirmar Senha"
               />
             </InputGroup>
-            <Input name="telephone" icon={faPhone} placeholder="Telefone" />
+            <Input name="phone" icon={faPhone} placeholder="Telefone" />
             <Save>
-              <ButtonSecondary icon={faCheck}>
+              <ButtonSecondary icon={faCheck} loading={loading}>
                 <span>Salvar</span>
               </ButtonSecondary>
             </Save>
