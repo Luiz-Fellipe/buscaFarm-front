@@ -30,6 +30,7 @@ import api from '~/services/api';
 import Input from '~/components/Input';
 import SimpleSelect from '~/components/global/SimpleSelect';
 import { useAuth } from '~/context/AuthContext';
+import { useToast } from '~/hooks/toast';
 import getValidationErrors from '~/utils/getValidationsErrors';
 
 interface EmployeePositionProps {
@@ -47,7 +48,7 @@ const EmployeeRegistration: React.FC = () => {
   const { pharmacie }: { pharmacie: any } = useAuth();
   const [loading, setLoading] = useState(false);
   const [employeePositions, setEmployeePositions] = useState<[{}]>([{}]);
-
+  const { addToast } = useToast();
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit = useCallback(
@@ -80,13 +81,19 @@ const EmployeeRegistration: React.FC = () => {
           pharmacie_id: pharmacie.id,
         });
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Sucesso !',
-          text: 'Usuário cadastrado com sucesso',
-          confirmButtonText: 'Ok',
-          confirmButtonColor: `${colors.primary}`,
+        addToast({
+          type: 'success',
+          title: 'Sucesso ao cadastrar usuário',
+          description: 'Usuário cadastrado com sucesso',
         });
+
+        // Swal.fire({
+        //   icon: 'success',
+        //   title: 'Sucesso !',
+        //   text: 'Usuário cadastrado com sucesso',
+        //   confirmButtonText: 'Ok',
+        //   confirmButtonColor: `${colors.primary}`,
+        // });
 
         setLoading(false);
         history.push('/funcionarios');
@@ -94,17 +101,15 @@ const EmployeeRegistration: React.FC = () => {
         const errors = getValidationErrors(err);
         formRef.current?.setErrors(errors);
         setLoading(false);
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro !',
-          text:
+        addToast({
+          type: 'error',
+          title: 'Erro ao cadastrar usuário',
+          description:
             'Não foi possivel cadastrar o funcionário. tente novamente mais tarde',
-          confirmButtonText: 'Ok',
-          confirmButtonColor: `${colors.primary}`,
         });
       }
     },
-    [pharmacie, history],
+    [pharmacie, history, addToast],
   );
 
   const loadEmployeePositions = useCallback(async () => {

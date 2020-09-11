@@ -13,6 +13,7 @@ import { ButtonPrimary } from '~/components/Button/styles';
 import ContainerWithBordes from '~/components/ContainerWithBordes';
 
 import { useAuth } from '~/context/AuthContext';
+import { useToast } from '~/hooks/toast';
 
 interface Request {
   email: string;
@@ -23,6 +24,7 @@ const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
   const { signIn, loading } = useAuth();
+  const { addToast } = useToast();
 
   const handleSubmit = useCallback(
     async (data: Request) => {
@@ -40,13 +42,21 @@ const SignIn: React.FC = () => {
           abortEarly: false,
         });
 
-        signIn({ email: data.email, password: data.password });
+        await signIn({ email: data.email, password: data.password });
       } catch (err) {
-        const errors = getValidationErrors(err);
-        formRef.current?.setErrors(errors);
+        console.log('entrou');
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors);
+        }
+        addToast({
+          type: 'error',
+          title: 'Erro na autenticação',
+          description: 'Ocorreu um erro ao fazer login, cheque as credenciais.',
+        });
       }
     },
-    [signIn],
+    [signIn, addToast],
   );
 
   return (
