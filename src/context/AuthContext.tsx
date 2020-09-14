@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useState, useContext } from 'react';
 import api from '../services/api';
+import { useToast } from '~/context/ToastContext';
 
 interface User {
   name: string;
@@ -30,13 +31,12 @@ interface AuthContextData {
   pharmacie: object;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
-  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const { addToast } = useToast();
   const [data, setData] = useState<AuthState>(() => {
     const token = localStorage.getItem('@BuscaFarm:token');
     const pharmacie = localStorage.getItem('@BuscaFarm:pharmacie');
@@ -54,32 +54,40 @@ const AuthProvider: React.FC = ({ children }) => {
     return {} as AuthState;
   });
 
-  const signIn = useCallback(async ({ email, password }) => {
-    try {
-      setLoading(true);
+  const signIn = useCallback(
+    async ({ email, password }) => {
+      try {
+        // setLoading(true);
 
-      const response = await api.post('sessions/employees', {
-        email,
-        password,
-      });
-      const { token, employee } = response.data;
-      setData({ token, employee, pharmacie: employee.pharmacie });
+        const response = await api.post('sessions/employees', {
+          email,
+          password,
+        });
+        const { token, employee } = response.data;
+        setData({ token, employee, pharmacie: employee.pharmacie });
 
-      localStorage.setItem('@BuscaFarm:token', token);
-      localStorage.setItem(
-        '@BuscaFarm:pharmacie',
-        JSON.stringify(employee.pharmacie),
-      );
-      delete employee.pharmacie;
-      localStorage.setItem('@BuscaFarm:employee', JSON.stringify(employee));
+        localStorage.setItem('@BuscaFarm:token', token);
+        localStorage.setItem(
+          '@BuscaFarm:pharmacie',
+          JSON.stringify(employee.pharmacie),
+        );
+        delete employee.pharmacie;
+        localStorage.setItem('@BuscaFarm:employee', JSON.stringify(employee));
 
-      api.defaults.headers.authorization = `Bearer ${token}`;
+        api.defaults.headers.authorization = `Bearer ${token}`;
 
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-    }
-  }, []);
+        // setLoading(false);
+      } catch (error) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao cadastrar usuário',
+          description:
+            'Não foi possivel cadastrar o funcionário. tente novamente mais tarde',
+        });
+      }
+    },
+    [addToast],
+  );
 
   const signOut = useCallback(() => {
     localStorage.removeItem('@BuscaFarm:token');
@@ -95,7 +103,6 @@ const AuthProvider: React.FC = ({ children }) => {
         pharmacie: data.pharmacie,
         signIn,
         signOut,
-        loading,
       }}
     >
       {children}

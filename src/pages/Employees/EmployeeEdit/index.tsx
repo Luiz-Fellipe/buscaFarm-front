@@ -28,7 +28,7 @@ import ContainerWithBordes from '~/components/ContainerWithBordes';
 import Input from '~/components/Input';
 import getValidationErrors from '~/utils/getValidationsErrors';
 import api from '~/services/api';
-import { useToast } from '~/hooks/toast';
+import { useToast } from '~/context/ToastContext';
 import SimpleSelect from '~/components/global/SimpleSelect';
 
 interface EmployeePositionProps {
