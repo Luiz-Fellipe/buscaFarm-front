@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
@@ -13,7 +13,7 @@ import { ButtonPrimary } from '~/components/Button/styles';
 import ContainerWithBordes from '~/components/ContainerWithBordes';
 
 import { useAuth } from '~/context/AuthContext';
-import { useToast } from '~/hooks/toast';
+import { useToast } from '~/context/ToastContext';
 
 interface Request {
   email: string;
@@ -22,9 +22,13 @@ interface Request {
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-
-  const { signIn, loading } = useAuth();
+  const [loading, setLoading] = useState<boolean>(false);
+  const { signIn } = useAuth();
   const { addToast } = useToast();
+
+  const handleLoading = useCallback(value => {
+    setLoading(value);
+  }, []);
 
   const handleSubmit = useCallback(
     async (data: Request) => {
@@ -41,9 +45,12 @@ const SignIn: React.FC = () => {
         await schema.validate(data, {
           abortEarly: false,
         });
-
+        handleLoading(true);
         await signIn({ email: data.email, password: data.password });
+
+        handleLoading(false);
       } catch (err) {
+        handleLoading(false);
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
           formRef.current?.setErrors(errors);
@@ -55,7 +62,7 @@ const SignIn: React.FC = () => {
         });
       }
     },
-    [signIn, addToast],
+    [signIn, addToast, handleLoading],
   );
 
   return (

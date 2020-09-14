@@ -6,7 +6,7 @@ import {
   faCheckCircle,
   faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons';
-import { ToastMessage, useToast } from '~/hooks/toast';
+import { useToast, ToastMessage } from '~/context/ToastContext';
 import { Container } from './styles';
 
 interface ToastProps {

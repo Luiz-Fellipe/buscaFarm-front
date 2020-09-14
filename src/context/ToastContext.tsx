@@ -30,7 +30,7 @@ const ToastProvider: React.FC = ({ children }) => {
         title,
         description,
       };
-      setMessages(states => [...states, toast]);
+      setMessages(state => [...state, toast]);
     },
     [],
   );

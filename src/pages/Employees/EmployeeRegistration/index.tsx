@@ -30,7 +30,7 @@ import api from '~/services/api';
 import Input from '~/components/Input';
 import SimpleSelect from '~/components/global/SimpleSelect';
 import { useAuth } from '~/context/AuthContext';
-import { useToast } from '~/hooks/toast';
+import { useToast } from '~/context/ToastContext';
 import getValidationErrors from '~/utils/getValidationsErrors';
 
 interface EmployeePositionProps {
