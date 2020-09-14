@@ -87,14 +87,6 @@ const EmployeeRegistration: React.FC = () => {
           description: 'Usuário cadastrado com sucesso',
         });
 
-        // Swal.fire({
-        //   icon: 'success',
-        //   title: 'Sucesso !',
-        //   text: 'Usuário cadastrado com sucesso',
-        //   confirmButtonText: 'Ok',
-        //   confirmButtonColor: `${colors.primary}`,
-        // });
-
         setLoading(false);
         history.push('/funcionarios');
       } catch (err) {
