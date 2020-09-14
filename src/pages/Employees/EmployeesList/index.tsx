@@ -100,7 +100,8 @@ const EmployeesList: React.FC = () => {
   const loadEmployees = useCallback(async () => {
     try {
       const response = await api.get('/employees');
-      setEmployeesOrganization(response.data.employees);
+      console.log(response);
+      setEmployeesOrganization(response.data.data.employees);
     } catch {}
   }, []);
 

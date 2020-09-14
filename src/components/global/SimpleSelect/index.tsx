@@ -8,7 +8,7 @@ interface Props extends SelectProps<OptionTypeBase> {
   name: string;
 }
 
-const SimpleSelect: React.FC<Props> = ({ name, ...rest }) => {
+const SimpleSelect: React.FC<Props> = ({ name, options, ...rest }) => {
   const selectRef = useRef(null);
   const { fieldName, defaultValue, registerField, error } = useField(name);
 
@@ -56,7 +56,11 @@ const SimpleSelect: React.FC<Props> = ({ name, ...rest }) => {
   return (
     <Wrapper>
       <Select
-        defaultValue={defaultValue}
+        defaultValue={
+          defaultValue &&
+          options &&
+          options.find(option => option.value === defaultValue)
+        }
         ref={selectRef}
         label="Cargo"
         styles={colourStyles}

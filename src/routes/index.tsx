@@ -6,18 +6,22 @@ import ManageMedicines from '~/pages/ManageMedicines';
 import EmployeesList from '~/pages/Employees/EmployeesList';
 import Budgets from '~/pages/Budgets';
 import EmployeeRegistration from '~/pages/Employees/EmployeeRegistration';
+import EmployeeEdit from '~/pages/Employees/EmployeeEdit';
 
 const Routes: React.FC = () => (
   <Switch>
     <Route path="/" exact component={SignIn} />
-    <Route path="/medicamentos" component={ManageMedicines} isPrivate />
-    <Route path="/funcionarios" component={EmployeesList} isPrivate />
-    <Route path="/orcamentos" component={Budgets} isPrivate />
+    <Route path="/medicamentos" exact component={ManageMedicines} isPrivate />
+
+    <Route path="/funcionarios" exact component={EmployeesList} isPrivate />
+    <Route path="/funcionarios/editar/:id" component={EmployeeEdit} isPrivate />
     <Route
-      path="/cadastro-de-funcionarios"
+      path="/funcionarios/cadastrar"
       component={EmployeeRegistration}
       isPrivate
     />
+
+    <Route path="/orcamentos" exact component={Budgets} isPrivate />
   </Switch>
 );
 
