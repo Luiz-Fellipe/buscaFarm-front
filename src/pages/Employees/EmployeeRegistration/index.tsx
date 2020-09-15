@@ -9,7 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 import Swal from 'sweetalert2';
 import colors from '~/styles/colors';
@@ -23,7 +23,7 @@ import {
   InputGroup,
   Save,
 } from './styles';
-import ButtonPrimary from '~/components/global/ButtonPrimary';
+import ButtonLink from '~/components/global/ButtonLink';
 import ButtonSecondary from '~/components/global/ButtonSecondary';
 import ContainerWithBordes from '~/components/ContainerWithBordes';
 import api from '~/services/api';
@@ -140,13 +140,17 @@ const EmployeeRegistration: React.FC = () => {
           <Title>
             <span>Cadastro De Funcionário</span>
           </Title>
-          <a href="/funcionarios" style={{ textDecoration: 'none' }}>
+          <Link to="/funcionarios" style={{ textDecoration: 'none' }}>
             <ButtonBackAndSave>
-              <ButtonPrimary icon={faArrowLeft}>
+              <ButtonLink
+                className="primary"
+                to="/funcionarios"
+                icon={faArrowLeft}
+              >
                 <span>Voltar</span>
-              </ButtonPrimary>
+              </ButtonLink>
             </ButtonBackAndSave>
-          </a>
+          </Link>
         </HeaderModal>
       </Wrapper>
       <ContainerWithBordes

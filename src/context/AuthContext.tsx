@@ -57,8 +57,6 @@ const AuthProvider: React.FC = ({ children }) => {
   const signIn = useCallback(
     async ({ email, password }) => {
       try {
-        // setLoading(true);
-
         const response = await api.post('sessions/employees', {
           email,
           password,
@@ -75,14 +73,12 @@ const AuthProvider: React.FC = ({ children }) => {
         localStorage.setItem('@BuscaFarm:employee', JSON.stringify(employee));
 
         api.defaults.headers.authorization = `Bearer ${token}`;
-
-        // setLoading(false);
       } catch (error) {
         addToast({
           type: 'error',
-          title: 'Erro ao cadastrar usuário',
+          title: 'Erro ao realizar o login',
           description:
-            'Não foi possivel cadastrar o funcionário. tente novamente mais tarde',
+            'Não foi possivel realizar o login. tente novamente mais tarde',
         });
       }
     },

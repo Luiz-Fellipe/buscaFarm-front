@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-
+import { debounce } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
 import {
   faPlusCircle,
   faSearch,
@@ -10,6 +11,7 @@ import {
 import Swal from 'sweetalert2';
 import exclamationSvg from '~/assets/icons/exclamation-mark.svg';
 import tickSvg from '~/assets/icons/tick.svg';
+import { useToast } from '~/context/ToastContext';
 
 import {
   Wrapper,
@@ -42,9 +44,21 @@ interface EmployeerProps {
   employee_position: EmployeePositionProps;
 }
 
+interface PageProps {
+  pageStart: number;
+  searchValue: string;
+}
+
+const LIMIT_PER_PAGE = 7;
+
 const EmployeesList: React.FC = () => {
   const [employeesOrganization, setEmployeesOrganization] = useState([]);
-
+  const [totalPage, setTotalPage] = useState(1);
+  const [pageState, setPageState] = useState<PageProps>({
+    pageStart: 1,
+    searchValue: '',
+  });
+  const { addToast } = useToast();
   function handleDelete(id: string) {
     AindaSwal.fire({
       title: 'Tem certeza de que deseja excluir este funcionário?',
@@ -99,15 +113,43 @@ const EmployeesList: React.FC = () => {
 
   const loadEmployees = useCallback(async () => {
     try {
-      const response = await api.get('/employees');
-      console.log(response);
-      setEmployeesOrganization(response.data.data.employees);
-    } catch {}
+      const {
+        data: { data, count },
+      } = await api.get('/employees', {
+        params: {
+          pageStart: (pageState.pageStart - 1) * LIMIT_PER_PAGE,
+          pageLength: LIMIT_PER_PAGE,
+          search: pageState.searchValue,
+        },
+      });
+
+      setTotalPage(Math.ceil(count / LIMIT_PER_PAGE));
+      setEmployeesOrganization(data);
+    } catch {
+      addToast({
+        type: 'error',
+        title: 'Erro ao carregar funcionários',
+        description:
+          'Não foi possivel carregar a lista de funcionários. tente novamente mais tarde',
+      });
+    }
+  }, [addToast, pageState]);
+
+  const handleChangePage = useCallback(currentPg => {
+    setPageState(state => {
+      return { ...state, pageStart: currentPg };
+    });
+  }, []);
+
+  const handleSearchValue = useCallback(value => {
+    setPageState({ pageStart: 1, searchValue: value });
   }, []);
 
   useEffect(() => {
     loadEmployees();
   }, [loadEmployees]);
+
+  const debounced = useCallback(debounce(handleSearchValue, 600), []);
 
   return (
     <Wrapper>
@@ -119,33 +161,38 @@ const EmployeesList: React.FC = () => {
           <Input>
             <InputSearch
               icon={faSearch}
+              onChange={e => debounced(e.target.value)}
               placeholder="Buscar Por Funcionários"
             />
           </Input>
-          <a href="/cadastro-de-funcionarios">
-            <ButtonAdd>
-              <FontAwesomeIcon icon={faPlusCircle} />
-              <span>CADASTRAR</span>
-            </ButtonAdd>
-          </a>
+
+          <ButtonAdd to="/funcionarios/cadastrar">
+            <FontAwesomeIcon icon={faPlusCircle} />
+            <span>CADASTRAR</span>
+          </ButtonAdd>
         </Functionalities>
       </Header>
-      <Table titles={['NOME', 'EMAIL', 'CARGO', 'AÇÕES']}>
+      <Table
+        titles={['NOME', 'EMAIL', 'CARGO', 'AÇÕES']}
+        handleChangePage={handleChangePage}
+        totalPages={totalPage}
+        currentPage={pageState.pageStart}
+      >
         {employeesOrganization.map((employee: EmployeerProps) => (
           <tr key={employee.id}>
             <td>{employee.user.name}</td>
             <td>{employee.user.email}</td>
             <td>{employee.employee_position.name}</td>
             <td>
-              <ButtonEdit type="button">
+              <ButtonEdit to={`funcionarios/editar/${employee.id}`}>
                 <FontAwesomeIcon icon={faPencilAlt} />
               </ButtonEdit>
 
-              <ButtonDelete type="button">
-                <FontAwesomeIcon
-                  icon={faTrash}
-                  onClick={() => handleDelete(employee.user.id)}
-                />
+              <ButtonDelete
+                onClick={() => handleDelete(employee.user.id)}
+                type="button"
+              >
+                <FontAwesomeIcon icon={faTrash} />
               </ButtonDelete>
             </td>
           </tr>
