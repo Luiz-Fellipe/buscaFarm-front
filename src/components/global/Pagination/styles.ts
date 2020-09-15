@@ -22,6 +22,11 @@ export const ButtonNextPrev = styled.button`
     margin-left: 10px;
     font-weight: bold;
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 `;
 
 export const ButtonPage = styled.button<ButtonPageProps>`

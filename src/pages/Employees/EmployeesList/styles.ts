@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import colors from '~/styles/colors';
 
 export const Wrapper = styled.div`
@@ -27,7 +28,8 @@ export const Input = styled.div`
   width: 30%;
 `;
 
-export const ButtonAdd = styled.button`
+export const ButtonAdd = styled(Link)`
+  text-decoration: none;
   background: ${colors.primary};
   padding: 15px 20px;
   border-radius: 10px;
@@ -39,7 +41,7 @@ export const ButtonAdd = styled.button`
   }
 `;
 
-export const ButtonEdit = styled.button`
+export const ButtonEdit = styled(Link)`
   padding: 5px 8px;
   background: ${colors.yellow};
   color: ${colors.white};

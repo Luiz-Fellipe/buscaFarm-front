@@ -9,13 +9,13 @@ import { Wrapper, ButtonNextPrev, ButtonPage } from './styles';
 
 interface PaginationProps {
   totalPages: number;
-  // changePage(): void;
+  changePage(currentPage: string): void;
   page: number;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
   totalPages,
-  // changePage,
+  changePage,
   page,
 }) => {
   const [pagesJSX, setPagesJSX] = useState<number[]>([]);
@@ -28,13 +28,24 @@ const Pagination: React.FC<PaginationProps> = ({
     setPagesJSX(data);
   }, [totalPages]);
 
+  const handleChangePages = useCallback(
+    currentPage => {
+      changePage(currentPage);
+    },
+    [changePage],
+  );
+
   useEffect(() => {
     handleRenderPages();
   }, [handleRenderPages]);
 
   return (
     <Wrapper>
-      <ButtonNextPrev type="button" disabled={page === 1}>
+      <ButtonNextPrev
+        type="button"
+        disabled={page === 1}
+        onClick={() => handleChangePages(page - 1)}
+      >
         <FontAwesomeIcon icon={faChevronLeft} />
         Anterior
       </ButtonNextPrev>
@@ -43,11 +54,16 @@ const Pagination: React.FC<PaginationProps> = ({
           type="button"
           key={pageNumber}
           isSelected={page === pageNumber}
+          onClick={() => handleChangePages(pageNumber)}
         >
           {pageNumber}
         </ButtonPage>
       ))}
-      <ButtonNextPrev type="button" disabled={page === totalPages}>
+      <ButtonNextPrev
+        type="button"
+        disabled={page === totalPages}
+        onClick={() => handleChangePages(page + 1)}
+      >
         Próximo
         <FontAwesomeIcon icon={faChevronRight} />
       </ButtonNextPrev>
