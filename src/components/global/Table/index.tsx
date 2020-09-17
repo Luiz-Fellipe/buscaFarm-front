@@ -5,9 +5,18 @@ import Pagination from '../Pagination';
 
 interface TableProps {
   titles: string[];
+  handleChangePage(currentPage: string): void;
+  totalPages: number;
+  currentPage: number;
 }
 
-const Table: React.FC<TableProps> = ({ titles, children }) => {
+const Table: React.FC<TableProps> = ({
+  titles,
+  children,
+  totalPages,
+  currentPage,
+  handleChangePage,
+}) => {
   return (
     <TableWrapper>
       <thead>
@@ -22,7 +31,11 @@ const Table: React.FC<TableProps> = ({ titles, children }) => {
       <tfoot>
         <tr>
           <td>
-            <Pagination page={1} totalPages={5} />
+            <Pagination
+              page={currentPage}
+              totalPages={totalPages}
+              changePage={handleChangePage}
+            />
           </td>
         </tr>
       </tfoot>

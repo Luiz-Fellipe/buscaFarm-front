@@ -21,7 +21,7 @@ import {
   InputGroup,
   Save,
 } from './styles';
-import ButtonPrimary from '~/components/global/ButtonPrimary';
+import ButtonLink from '~/components/global/ButtonLink';
 import ButtonSecondary from '~/components/global/ButtonSecondary';
 import ContainerWithBordes from '~/components/ContainerWithBordes';
 
@@ -42,7 +42,7 @@ interface OptionsProps {
 
 const EmployeeEdit: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const [employeeEdit, setEmployeeEdit] = useState<object>({});
   const history = useHistory();
   const { addToast } = useToast();
@@ -176,13 +176,16 @@ const EmployeeEdit: React.FC = () => {
           <Title>
             <span>Editar Dados do Funcionário</span>
           </Title>
-          <a href="/funcionarios" style={{ textDecoration: 'none' }}>
-            <ButtonBackAndSave>
-              <ButtonPrimary icon={faArrowLeft}>
-                <span>Voltar</span>
-              </ButtonPrimary>
-            </ButtonBackAndSave>
-          </a>
+
+          <ButtonBackAndSave>
+            <ButtonLink
+              className="primary"
+              to="/funcionarios"
+              icon={faArrowLeft}
+            >
+              <span>Voltar</span>
+            </ButtonLink>
+          </ButtonBackAndSave>
         </HeaderModal>
       </Wrapper>
       <ContainerWithBordes
