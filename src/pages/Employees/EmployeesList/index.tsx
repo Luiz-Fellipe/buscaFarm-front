@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { debounce } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
+
 import {
   faPlusCircle,
   faSearch,

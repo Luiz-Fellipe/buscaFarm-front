@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import colors from '~/styles/colors';
 
@@ -47,7 +48,7 @@ export const ButtonDelete = styled.button`
   border-radius: 4px;
 `;
 
-export const ButtonEdit = styled.button`
+export const ButtonEdit = styled(Link)`
   padding: 5px 8px;
   background: ${colors.yellow};
   color: ${colors.white};
