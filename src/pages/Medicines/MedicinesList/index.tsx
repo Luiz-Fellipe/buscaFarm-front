@@ -1,10 +1,12 @@
 import {
   faPencilAlt,
+  faPlusCircle,
   faSearch,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Table from '~/components/global/Table';
 import InputSearch from '~/components/global/InputSearch';
 
@@ -16,10 +18,10 @@ import {
   Title,
   Functionalities,
   Input,
+  ButtonAdd,
 } from './styles';
-import colors from '~/styles/colors';
 
-const Budgets: React.FC = () => {
+const MedicineList: React.FC = () => {
   function handleChangePage() {
     console.log('dado fixo table medicine');
   }
@@ -28,27 +30,36 @@ const Budgets: React.FC = () => {
     <Wrapper>
       <Header>
         <Title>
-          <span>Gerenciar Orçamentos</span>
+          <span>Gerenciar Medicamentos</span>
         </Title>
         <Functionalities>
           <Input>
-            <InputSearch icon={faSearch} placeholder="Buscar Por Orçamentos" />
+            <InputSearch
+              icon={faSearch}
+              placeholder="Buscar Por Medicamentos"
+            />
           </Input>
+          <Link to="/medicamentos/cadastrar">
+            <ButtonAdd>
+              <FontAwesomeIcon icon={faPlusCircle} />
+              <span>CADASTRAR</span>
+            </ButtonAdd>
+          </Link>
         </Functionalities>
       </Header>
       <Table
-        titles={['NOME', 'DATA', 'VALOR', 'STATUS', 'AÇÕES']}
+        titles={['NOME', 'FABRICANTE', 'PREÇO', 'QUANTIDADE', 'AÇÕES']}
         handleChangePage={handleChangePage}
         totalPages={1}
         currentPage={1}
       >
         <tr>
-          <td>Marcio Balian</td>
-          <td>07/09/2020</td>
+          <td>Dipirona</td>
+          <td>Neo Quimica</td>
           <td>R$ 10,90</td>
-          <td style={{ color: colors.yellow, fontWeight: 'bold' }}>PENDENTE</td>
+          <td>1</td>
           <td>
-            <ButtonEdit type="button">
+            <ButtonEdit type="button" to="/medicamentos/editar">
               <FontAwesomeIcon icon={faPencilAlt} />
             </ButtonEdit>
 
@@ -58,14 +69,14 @@ const Budgets: React.FC = () => {
           </td>
         </tr>
         <tr>
-          <td>Luiz Fellipe</td>
-          <td>17/09/2020</td>
+          <td>Dipirona</td>
+          <td>Neo Quimica</td>
           <td>R$ 10,90</td>
 
-          <td style={{ color: colors.red, fontWeight: 'bold' }}>CANCELADO</td>
+          <td>1</td>
 
           <td>
-            <ButtonEdit type="button">
+            <ButtonEdit type="button" to="/medicamentos/editar">
               <FontAwesomeIcon icon={faPencilAlt} />
             </ButtonEdit>
 
@@ -75,16 +86,14 @@ const Budgets: React.FC = () => {
           </td>
         </tr>
         <tr>
-          <td>Lucas Dallier Arraes</td>
-          <td>05/09/2020</td>
+          <td>Dipirona</td>
+          <td>Neo Quimica</td>
           <td>R$ 10,90</td>
 
-          <td style={{ color: colors.primary, fontWeight: 'bold' }}>
-            FINALIZADO
-          </td>
+          <td>1</td>
 
           <td>
-            <ButtonEdit type="button">
+            <ButtonEdit type="button" to="/medicamentos/editar">
               <FontAwesomeIcon icon={faPencilAlt} />
             </ButtonEdit>
 
@@ -94,16 +103,14 @@ const Budgets: React.FC = () => {
           </td>
         </tr>
         <tr>
-          <td>Samuel Xavier</td>
-          <td>10/09/2019</td>
+          <td>Dipirosfsdfsdfsdsdfsdfna</td>
+          <td>Neo Quimica</td>
           <td>R$ 10,90</td>
 
-          <td style={{ color: colors.primary, fontWeight: 'bold' }}>
-            FINALIZADO
-          </td>
+          <td>1</td>
 
           <td>
-            <ButtonEdit type="button">
+            <ButtonEdit type="button" to="/medicamentos/editar">
               <FontAwesomeIcon icon={faPencilAlt} />
             </ButtonEdit>
 
@@ -117,4 +124,4 @@ const Budgets: React.FC = () => {
   );
 };
 
-export default Budgets;
+export default MedicineList;
