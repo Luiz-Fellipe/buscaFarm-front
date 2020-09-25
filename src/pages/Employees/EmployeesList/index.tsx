@@ -114,7 +114,9 @@ const EmployeesList: React.FC = () => {
   const loadEmployees = useCallback(async () => {
     try {
       const {
-        data: { data, count },
+        data: {
+          employee: { data, count },
+        },
       } = await api.get('/employees', {
         params: {
           pageStart: (pageState.pageStart - 1) * LIMIT_PER_PAGE,

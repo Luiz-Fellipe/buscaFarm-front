@@ -66,13 +66,15 @@ const EmployeeEdit: React.FC = () => {
 
   const getEmployee = useCallback(async () => {
     try {
-      const { data } = await api.get(`/employees/${id}`);
+      const {
+        data: { employee },
+      } = await api.get(`/employees/${id}`);
 
-      setEmployeeEdit(data);
+      setEmployeeEdit(employee);
 
       await formRef.current?.setFieldValue('employee_position_id', {
-        label: data.employee_position.name,
-        value: data.employee_position_id,
+        label: employee.employee_position.name,
+        value: employee.employee_position_id,
       });
     } catch {
       addToast({
