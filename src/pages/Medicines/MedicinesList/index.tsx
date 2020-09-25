@@ -52,13 +52,16 @@ const MedicineList: React.FC = () => {
         handleChangePage={handleChangePage}
         totalPages={1}
         currentPage={1}
+        existData
+        loading={false}
+        searching={false}
       >
-        <tr>
-          <td>Dipirona</td>
-          <td>Neo Quimica</td>
-          <td>R$ 10,90</td>
-          <td>1</td>
-          <td>
+        <div>
+          <span>Dipirona</span>
+          <span>Neo Quimica</span>
+          <span>R$ 10,90</span>
+          <span>1</span>
+          <div>
             <ButtonEdit type="button" to="/medicamentos/editar">
               <FontAwesomeIcon icon={faPencilAlt} />
             </ButtonEdit>
@@ -66,16 +69,14 @@ const MedicineList: React.FC = () => {
             <ButtonDelete type="button">
               <FontAwesomeIcon icon={faTrash} />
             </ButtonDelete>
-          </td>
-        </tr>
-        <tr>
-          <td>Dipirona</td>
-          <td>Neo Quimica</td>
-          <td>R$ 10,90</td>
-
-          <td>1</td>
-
-          <td>
+          </div>
+        </div>
+        <div>
+          <span>Dipirona</span>
+          <span>Neo Quimica</span>
+          <span>R$ 10,90</span>
+          <span>1</span>
+          <div>
             <ButtonEdit type="button" to="/medicamentos/editar">
               <FontAwesomeIcon icon={faPencilAlt} />
             </ButtonEdit>
@@ -83,42 +84,8 @@ const MedicineList: React.FC = () => {
             <ButtonDelete type="button">
               <FontAwesomeIcon icon={faTrash} />
             </ButtonDelete>
-          </td>
-        </tr>
-        <tr>
-          <td>Dipirona</td>
-          <td>Neo Quimica</td>
-          <td>R$ 10,90</td>
-
-          <td>1</td>
-
-          <td>
-            <ButtonEdit type="button" to="/medicamentos/editar">
-              <FontAwesomeIcon icon={faPencilAlt} />
-            </ButtonEdit>
-
-            <ButtonDelete type="button">
-              <FontAwesomeIcon icon={faTrash} />
-            </ButtonDelete>
-          </td>
-        </tr>
-        <tr>
-          <td>Dipirosfsdfsdfsdsdfsdfna</td>
-          <td>Neo Quimica</td>
-          <td>R$ 10,90</td>
-
-          <td>1</td>
-
-          <td>
-            <ButtonEdit type="button" to="/medicamentos/editar">
-              <FontAwesomeIcon icon={faPencilAlt} />
-            </ButtonEdit>
-
-            <ButtonDelete type="button">
-              <FontAwesomeIcon icon={faTrash} />
-            </ButtonDelete>
-          </td>
-        </tr>
+          </div>
+        </div>
       </Table>
     </Wrapper>
   );

@@ -1,13 +1,23 @@
 import React from 'react';
 
-import { TableWrapper } from './styles';
+import {
+  TableWrapper,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  IsEmpty,
+} from './styles';
 import Pagination from '../Pagination';
+import BoxLoading from '~/components/global/BoxLoading';
 
 interface TableProps {
   titles: string[];
   handleChangePage(currentPage: string): void;
   totalPages: number;
   currentPage: number;
+  searching: boolean | string;
+  existData: boolean | string;
+  loading: boolean;
 }
 
 const Table: React.FC<TableProps> = ({
@@ -15,30 +25,42 @@ const Table: React.FC<TableProps> = ({
   children,
   totalPages,
   currentPage,
+  searching,
+  loading,
+  existData,
   handleChangePage,
 }) => {
   return (
     <TableWrapper>
-      <thead>
-        <tr>
-          {titles.map(title => (
-            <th key={title}>{title}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>{children}</tbody>
+      <TableHeader qtdColumns={titles.length}>
+        {titles.map(title => (
+          <span key={title}>{title}</span>
+        ))}
+      </TableHeader>
 
-      <tfoot>
-        <tr>
-          <td>
-            <Pagination
-              page={currentPage}
-              totalPages={totalPages}
-              changePage={handleChangePage}
-            />
-          </td>
-        </tr>
-      </tfoot>
+      {existData && (
+        <TableBody qtdColumns={titles.length}>{children}</TableBody>
+      )}
+
+      {searching && (
+        <IsEmpty>
+          <span>Não encontramos o resultado para sua busca.</span>
+        </IsEmpty>
+      )}
+
+      {loading && (
+        <IsEmpty>
+          <BoxLoading loading />
+        </IsEmpty>
+      )}
+
+      <TableFooter>
+        <Pagination
+          page={currentPage}
+          totalPages={totalPages}
+          changePage={handleChangePage}
+        />
+      </TableFooter>
     </TableWrapper>
   );
 };
