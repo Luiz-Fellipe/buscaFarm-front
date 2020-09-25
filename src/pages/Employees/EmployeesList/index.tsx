@@ -53,12 +53,19 @@ const LIMIT_PER_PAGE = 7;
 
 const EmployeesList: React.FC = () => {
   const [employeesOrganization, setEmployeesOrganization] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [totalPage, setTotalPage] = useState(1);
   const [pageState, setPageState] = useState<PageProps>({
     pageStart: 1,
     searchValue: '',
   });
   const { addToast } = useToast();
+
+  const searching: string | boolean =
+    !loading && pageState.searchValue && !employeesOrganization.length;
+
+  const existEmployees = !loading && !!employeesOrganization.length;
+
   function handleDelete(id: string) {
     AindaSwal.fire({
       title: 'Tem certeza de que deseja excluir este funcionário?',
@@ -113,8 +120,11 @@ const EmployeesList: React.FC = () => {
 
   const loadEmployees = useCallback(async () => {
     try {
+      setLoading(true);
       const {
-        data: { data, count },
+        data: {
+          employee: { data, count },
+        },
       } = await api.get('/employees', {
         params: {
           pageStart: (pageState.pageStart - 1) * LIMIT_PER_PAGE,
@@ -125,7 +135,9 @@ const EmployeesList: React.FC = () => {
 
       setTotalPage(Math.ceil(count / LIMIT_PER_PAGE));
       setEmployeesOrganization(data);
+      setLoading(false);
     } catch {
+      setLoading(false);
       addToast({
         type: 'error',
         title: 'Erro ao carregar funcionários',
@@ -172,18 +184,22 @@ const EmployeesList: React.FC = () => {
           </ButtonAdd>
         </Functionalities>
       </Header>
+
       <Table
         titles={['NOME', 'EMAIL', 'CARGO', 'AÇÕES']}
         handleChangePage={handleChangePage}
         totalPages={totalPage}
         currentPage={pageState.pageStart}
+        searching={searching}
+        existData={existEmployees}
+        loading={loading}
       >
         {employeesOrganization.map((employee: EmployeerProps) => (
-          <tr key={employee.id}>
-            <td>{employee.user.name}</td>
-            <td>{employee.user.email}</td>
-            <td>{employee.employee_position.name}</td>
-            <td>
+          <div key={employee.id}>
+            <span>{employee.user.name}</span>
+            <span>{employee.user.email}</span>
+            <span>{employee.employee_position.name}</span>
+            <div>
               <ButtonEdit to={`funcionarios/editar/${employee.id}`}>
                 <FontAwesomeIcon icon={faPencilAlt} />
               </ButtonEdit>
@@ -194,8 +210,8 @@ const EmployeesList: React.FC = () => {
               >
                 <FontAwesomeIcon icon={faTrash} />
               </ButtonDelete>
-            </td>
-          </tr>
+            </div>
+          </div>
         ))}
       </Table>
     </Wrapper>
