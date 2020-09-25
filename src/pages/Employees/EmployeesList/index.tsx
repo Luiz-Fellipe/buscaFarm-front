@@ -22,6 +22,7 @@ import {
   Input,
   ButtonEdit,
   ButtonDelete,
+  NoHaveEmployee,
 } from './styles';
 
 import Table from '~/components/global/Table';
@@ -29,6 +30,7 @@ import InputSearch from '~/components/global/InputSearch';
 import colors from '~/styles/colors';
 import api from '~/services/api';
 import { AindaSwal } from '~/components/global/AindaSwal';
+import BoxLoading from '~/components/global/BoxLoading';
 
 interface EmployeePositionProps {
   name: string;
@@ -49,16 +51,23 @@ interface PageProps {
   searchValue: string;
 }
 
-const LIMIT_PER_PAGE = 7;
+const LIMIT_PER_PAGE = 1;
 
 const EmployeesList: React.FC = () => {
   const [employeesOrganization, setEmployeesOrganization] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [totalPage, setTotalPage] = useState(1);
   const [pageState, setPageState] = useState<PageProps>({
     pageStart: 1,
     searchValue: '',
   });
   const { addToast } = useToast();
+
+  const Searching =
+    !loading && pageState.searchValue && !employeesOrganization.length;
+
+  const existEmployees = !loading && !!employeesOrganization.length;
+
   function handleDelete(id: string) {
     AindaSwal.fire({
       title: 'Tem certeza de que deseja excluir este funcionário?',
@@ -113,8 +122,11 @@ const EmployeesList: React.FC = () => {
 
   const loadEmployees = useCallback(async () => {
     try {
+      setLoading(true);
       const {
-        data: { data, count },
+        data: {
+          employee: { data, count },
+        },
       } = await api.get('/employees', {
         params: {
           pageStart: (pageState.pageStart - 1) * LIMIT_PER_PAGE,
@@ -125,7 +137,9 @@ const EmployeesList: React.FC = () => {
 
       setTotalPage(Math.ceil(count / LIMIT_PER_PAGE));
       setEmployeesOrganization(data);
+      setLoading(false);
     } catch {
+      setLoading(false);
       addToast({
         type: 'error',
         title: 'Erro ao carregar funcionários',
@@ -172,32 +186,46 @@ const EmployeesList: React.FC = () => {
           </ButtonAdd>
         </Functionalities>
       </Header>
-      <Table
-        titles={['NOME', 'EMAIL', 'CARGO', 'AÇÕES']}
-        handleChangePage={handleChangePage}
-        totalPages={totalPage}
-        currentPage={pageState.pageStart}
-      >
-        {employeesOrganization.map((employee: EmployeerProps) => (
-          <tr key={employee.id}>
-            <td>{employee.user.name}</td>
-            <td>{employee.user.email}</td>
-            <td>{employee.employee_position.name}</td>
-            <td>
-              <ButtonEdit to={`funcionarios/editar/${employee.id}`}>
-                <FontAwesomeIcon icon={faPencilAlt} />
-              </ButtonEdit>
 
-              <ButtonDelete
-                onClick={() => handleDelete(employee.user.id)}
-                type="button"
-              >
-                <FontAwesomeIcon icon={faTrash} />
-              </ButtonDelete>
-            </td>
-          </tr>
-        ))}
-      </Table>
+      {loading && (
+        <NoHaveEmployee>
+          <BoxLoading loading />
+        </NoHaveEmployee>
+      )}
+
+      {Searching && (
+        <NoHaveEmployee>
+          <span>{`Não encontramos o resultado para sua busca '${pageState.searchValue}'.`}</span>
+        </NoHaveEmployee>
+      )}
+      {existEmployees && (
+        <Table
+          titles={['NOME', 'EMAIL', 'CARGO', 'AÇÕES']}
+          handleChangePage={handleChangePage}
+          totalPages={totalPage}
+          currentPage={pageState.pageStart}
+        >
+          {employeesOrganization.map((employee: EmployeerProps) => (
+            <tr key={employee.id}>
+              <td>{employee.user.name}</td>
+              <td>{employee.user.email}</td>
+              <td>{employee.employee_position.name}</td>
+              <td>
+                <ButtonEdit to={`funcionarios/editar/${employee.id}`}>
+                  <FontAwesomeIcon icon={faPencilAlt} />
+                </ButtonEdit>
+
+                <ButtonDelete
+                  onClick={() => handleDelete(employee.user.id)}
+                  type="button"
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </ButtonDelete>
+              </td>
+            </tr>
+          ))}
+        </Table>
+      )}
     </Wrapper>
   );
 };

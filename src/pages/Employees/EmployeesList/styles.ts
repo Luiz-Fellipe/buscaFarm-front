@@ -56,3 +56,5 @@ export const ButtonDelete = styled.button`
   border: none;
   border-radius: 4px;
 `;
+
+export const NoHaveEmployee = styled.div``;
