@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
-import { FormHandles } from '@unform/core';
+import { FormHandles, Scope } from '@unform/core';
 import {
   Wrapper,
   HeaderModal,
@@ -29,12 +29,25 @@ import Input from '~/components/Input';
 import getValidationErrors from '~/utils/getValidationsErrors';
 import api from '~/services/api';
 import { useToast } from '~/context/ToastContext';
-import SimpleSelect from '~/components/global/SimpleSelect';
+import AsyncSelect from '~/components/global/Selects/AsyncSelect';
 
 interface EmployeePositionProps {
   id?: string;
   name?: string;
 }
+
+interface DataProps extends Request {
+  employee_position_id: string;
+  user: {
+    name: string;
+    email: string;
+    phone: string;
+    password?: string;
+    confirmPassword?: string;
+    oldPassword?: string;
+  };
+}
+
 interface OptionsProps {
   value: EmployeePositionProps;
   label: EmployeePositionProps;
@@ -47,21 +60,21 @@ const EmployeeEdit: React.FC = () => {
   const history = useHistory();
   const { addToast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [loadingEmplPos, setLoadingEmplPos] = useState(false);
+
   const [employeePositions, setEmployeePositions] = useState<[{}]>([{}]);
 
   const getEmployee = useCallback(async () => {
     try {
       const {
-        data: {
-          user: { name, email, phone },
-          employee_position_id,
-        },
+        data: { employee },
       } = await api.get(`/employees/${id}`);
-      setEmployeeEdit({
-        name,
-        email,
-        phone,
-        employee_position_id,
+
+      setEmployeeEdit(employee);
+
+      await formRef.current?.setFieldValue('employee_position_id', {
+        label: employee.employee_position.name,
+        value: employee.employee_position_id,
       });
     } catch {
       addToast({
@@ -72,28 +85,34 @@ const EmployeeEdit: React.FC = () => {
     }
   }, [id, addToast]);
 
-  useEffect(() => {
-    getEmployee();
-  }, [getEmployee]);
-
   const handleSubmit = useCallback(
-    async (data: Request) => {
+    async (data: DataProps) => {
       try {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          name: Yup.string().required('Nome do Funcionário Obrigatório'),
+          user: Yup.object().shape({
+            name: Yup.string().required('Nome do Funcionário Obrigatório'),
+            phone: Yup.string(),
+            email: Yup.string()
+              .required('Email obrigatório')
+              .email('Digite um e-mail válido'),
+          }),
+
           employee_position_id: Yup.string().required(
             'Nome do Cargo Obrigatório',
           ),
-          email: Yup.string()
-            .required('Email obrigatório')
-            .email('Digite um e-mail válido'),
-          password: Yup.string().min(6, 'Senha de no mínimo 6 dígitos'),
-          confirmPassword: Yup.string()
-            .required('O Confirmar senha é obrigatório')
-            .oneOf([Yup.ref('password')], 'As senhas não batem'),
-          phone: Yup.string().required('Informar número de usuário'),
+
+          // password: Yup.string().test(
+          //   'empty-check',
+          //   'Password must be at least 8 characters',
+          //   password => password?.length === 0,
+          // ),
+
+          // confirmPassword: Yup.string().oneOf(
+          //   [Yup.ref('password')],
+          //   'As senhas digitadas não coincidem',
+          // ),
         });
 
         await schema.validate(data, {
@@ -101,23 +120,28 @@ const EmployeeEdit: React.FC = () => {
         });
 
         setLoading(true);
-        // await api.put('/employees/edit', {
-        //   employee_id,
-        //   employee_position_id,
-        //   name,
-        //   email,
-        //   password,
-        //   old_password,
-        //   phone,
-        // });
+
+        const {
+          employee_position_id,
+          user: { name, email, phone },
+        } = data;
+
+        await api.put('/employees/edit', {
+          employee_id: id,
+          employee_position_id,
+          name,
+          email,
+          phone,
+        });
 
         addToast({
           type: 'success',
-          title: 'Sucesso ao editar usuário',
-          description: 'Usuário editado com sucesso',
+          title: 'Sucesso !',
+          description: 'Funcionário editado com sucesso',
         });
 
         setLoading(false);
+
         history.push('/funcionarios');
       } catch (err) {
         const errors = getValidationErrors(err);
@@ -125,43 +149,55 @@ const EmployeeEdit: React.FC = () => {
         setLoading(false);
         addToast({
           type: 'error',
-          title: 'Erro ao cadastrar usuário',
+          title: 'Erro ao editar funcionário',
           description:
-            'Não foi possivel cadastrar o funcionário. tente novamente mais tarde',
+            'Não foi possivel editar o funcionário. tente novamente mais tarde',
         });
       }
     },
-    [history, addToast],
+    [history, addToast, id],
   );
 
-  const loadEmployeePositions = useCallback(async () => {
-    try {
-      const {
-        data: { data },
-      } = await api.get('/employees/position', {
-        params: {
-          pageStart: 0,
-          pageLength: 30,
-          search: '',
-        },
-      });
+  const loadEmployeePositions = useCallback(
+    async (inputValue?: string, callback?: Function) => {
+      try {
+        setLoadingEmplPos(true);
+        const {
+          data: { data },
+        } = await api.get('/employees/position', {
+          params: {
+            pageStart: 0,
+            search: inputValue || '',
+            pageLength: 10,
+          },
+        });
 
-      const options = data.map(
-        ({ id: idOptions, name }: EmployeePositionProps) => ({
-          value: idOptions,
-          label: name,
-        }),
-      );
+        const options = data.map((empl: EmployeePositionProps) => ({
+          value: empl.id,
+          label: empl.name,
+        }));
 
-      setEmployeePositions(options);
-    } catch (e) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao buscar os cargos',
-        description: 'Ocorreu um erro ao buscar os cargos.',
-      });
-    }
-  }, [addToast]);
+        if (inputValue && callback) {
+          callback(options);
+        } else {
+          setEmployeePositions(options);
+        }
+        setLoadingEmplPos(false);
+      } catch (e) {
+        setLoadingEmplPos(false);
+        addToast({
+          type: 'error',
+          title: 'Erro ao buscar os cargos',
+          description: 'Ocorreu um erro ao buscar os cargos.',
+        });
+      }
+    },
+    [addToast],
+  );
+
+  useEffect(() => {
+    getEmployee();
+  }, [getEmployee]);
 
   useEffect(() => {
     loadEmployeePositions();
@@ -188,43 +224,49 @@ const EmployeeEdit: React.FC = () => {
       </Wrapper>
       <ContainerWithBordes
         widthPercent="70"
-        heightPercent="54"
+        heightPercent="35"
         borderHeightPx="81"
         borderWidthPx="12"
       >
         <Container>
-          <Form
-            ref={formRef}
-            initialData={employeeEdit}
-            onSubmit={handleSubmit}
-          >
-            <Input
-              name="name"
-              icon={faUser}
-              placeholder="Nome do funcionário"
-            />
-            <InputGroup>
-              <Input name="email" icon={faEnvelope} placeholder="E-mail" />
-              <SimpleSelect
-                placeholder="Cargo"
-                fieldName="employee_position_id"
-                name="employee_position_id"
-                options={employeePositions}
-              />
-              <Input name="password" icon={faLock} placeholder="Senha" />
-              <Input
-                name="confirmPassword"
-                icon={faLock}
-                placeholder="Confirmar Senha"
-              />
-            </InputGroup>
-            <Input name="phone" icon={faPhone} placeholder="Telefone" />
-            <Save>
-              <ButtonSecondary icon={faCheck} loading={loading}>
-                <span>Salvar</span>
-              </ButtonSecondary>
-            </Save>
-          </Form>
+          {employeeEdit && (
+            <Form
+              ref={formRef}
+              initialData={employeeEdit}
+              onSubmit={handleSubmit}
+            >
+              <Scope path="user">
+                <InputGroup>
+                  <Input
+                    name="name"
+                    icon={faUser}
+                    placeholder="Nome do funcionário"
+                  />
+                  <Input name="email" icon={faEnvelope} placeholder="E-mail" />
+                </InputGroup>
+              </Scope>
+              <InputGroup>
+                <Scope path="user">
+                  <Input name="phone" icon={faPhone} placeholder="Telefone" />
+                </Scope>
+
+                <AsyncSelect
+                  isLoading={loadingEmplPos}
+                  placeholder="Cargo"
+                  defaultOptions={employeePositions}
+                  loadOptions={loadEmployeePositions}
+                  fieldName="employee_position_id"
+                  name="employee_position_id"
+                />
+              </InputGroup>
+
+              <Save>
+                <ButtonSecondary icon={faCheck} loading={loading}>
+                  <span>Salvar</span>
+                </ButtonSecondary>
+              </Save>
+            </Form>
+          )}
         </Container>
       </ContainerWithBordes>
     </>
