@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt, faBell } from '@fortawesome/free-solid-svg-icons';
+import {
+  faSignOutAlt,
+  faBell,
+  faUser,
+} from '@fortawesome/free-solid-svg-icons';
 import LogoBF from '~/assets/images/Logo.png';
-import User from '~/assets/images/ImageProfile.png';
 
 import { useAuth } from '~/context/AuthContext';
 
@@ -12,12 +15,15 @@ import {
   HeaderApplication,
   Logo,
   Navigation,
-  NameProfile,
+  Profile,
   NotificationsAndLogout,
 } from './styles';
 
 const Header: React.FC = () => {
   const { signOut, employee } = useAuth();
+
+  const [noAvatarImage, setNoAvatarImage] = useState(false);
+
   return (
     <HeaderApplication>
       <Logo>
@@ -32,15 +38,25 @@ const Header: React.FC = () => {
         <NavLink to="/funcionarios">FUNCIONÁRIOS</NavLink>
         <NavLink to="/orcamentos">ORÇAMENTOS</NavLink>
       </Navigation>
-      <NameProfile>
+      <Profile>
         <div>
           <h5>{employee.user.name}</h5>
           <span>{employee.employee_position.name}</span>
         </div>
         <div>
-          <img src={User} alt="" />
+          {noAvatarImage ? (
+            <div className="no-avatar">
+              <FontAwesomeIcon icon={faUser} />
+            </div>
+          ) : (
+            <img
+              src={employee.user.avatar_url || ''}
+              onError={() => setNoAvatarImage(true)}
+              alt=""
+            />
+          )}
         </div>
-      </NameProfile>
+      </Profile>
       <NotificationsAndLogout>
         <button type="button">
           <FontAwesomeIcon icon={faBell} />
