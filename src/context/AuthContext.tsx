@@ -4,6 +4,7 @@ import { useToast } from '~/context/ToastContext';
 
 interface User {
   name: string;
+  avatar_url: string;
 }
 
 interface EmployeePosition {
