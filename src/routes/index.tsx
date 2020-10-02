@@ -20,12 +20,8 @@ const Routes: React.FC = () => (
       component={MedicineRegistration}
       isPrivate
     />
-    <Route
-      path="/medicamentos/editar"
-      exact
-      component={MedicineEdit}
-      isPrivate
-    />
+
+    <Route path="/medicamentos/editar/:id" component={MedicineEdit} isPrivate />
 
     <Route path="/funcionarios" exact component={EmployeesList} isPrivate />
     <Route path="/funcionarios/editar/:id" component={EmployeeEdit} isPrivate />
