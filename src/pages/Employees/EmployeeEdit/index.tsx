@@ -146,7 +146,6 @@ const EmployeeEdit: React.FC = () => {
         },
       });
 
-      console.log('data', data);
       const options = data.map(
         ({ id: idOptions, name }: EmployeePositionProps) => ({
           value: idOptions,
@@ -156,7 +155,6 @@ const EmployeeEdit: React.FC = () => {
 
       setEmployeePositions(options);
     } catch (e) {
-      console.log(e);
       addToast({
         type: 'error',
         title: 'Erro ao buscar os cargos',
