@@ -6,14 +6,24 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import getValidationErrors from '../../utils/getValidationsErrors';
-import LogoBF from '~/assets/images/Logo.png';
-import { Container, Logo, FormLogin, Wrapper } from './styles';
-import Input from '~/components/Input';
+import LogoBF from '~/assets/images/Logo.svg';
+import PictureLogin from '~/assets/images/picture-login.svg';
+
 import { ButtonPrimary } from '~/components/Button/styles';
-import ContainerWithBordes from '~/components/ContainerWithBordes';
 
 import { useAuth } from '~/context/AuthContext';
 import { useToast } from '~/context/ToastContext';
+
+import {
+  Container,
+  Logo,
+  FormLogin,
+  Wrapper,
+  DivLeft,
+  DivRight,
+  InputEmail,
+  InputPassword,
+} from './styles';
 
 interface Request {
   email: string;
@@ -67,26 +77,21 @@ const SignIn: React.FC = () => {
 
   return (
     <Wrapper>
-      <ContainerWithBordes
-        widthPercent="30"
-        heightPercent="60"
-        borderHeightPx="100"
-        borderWidthPx="13"
-      >
-        <Container>
+      <Container>
+        <DivLeft>
           <Logo>
             <img src={LogoBF} alt="" />
           </Logo>
 
           <FormLogin ref={formRef} onSubmit={handleSubmit}>
-            <Input
+            <InputEmail
               name="email"
               type="email"
               icon={faUser}
               placeholder="Usuário"
             />
 
-            <Input
+            <InputPassword
               name="password"
               type="password"
               icon={faLock}
@@ -103,8 +108,11 @@ const SignIn: React.FC = () => {
               )}
             </ButtonPrimary>
           </FormLogin>
-        </Container>
-      </ContainerWithBordes>
+        </DivLeft>
+        <DivRight>
+          <img src={PictureLogin} alt="" />
+        </DivRight>
+      </Container>
     </Wrapper>
   );
 };

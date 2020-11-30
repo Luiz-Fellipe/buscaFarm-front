@@ -3,7 +3,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt, faBell } from '@fortawesome/free-solid-svg-icons';
-import LogoBF from '~/assets/images/Logo.png';
+import LogoBF from '~/assets/images/Logo.svg';
 import User from '~/assets/images/ImageProfile.png';
 
 import { useAuth } from '~/context/AuthContext';
