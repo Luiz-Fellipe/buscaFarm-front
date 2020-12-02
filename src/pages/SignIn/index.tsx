@@ -77,42 +77,40 @@ const SignIn: React.FC = () => {
 
   return (
     <Wrapper>
-      <Container>
-        <DivLeft>
-          <Logo>
-            <img src={LogoBF} alt="" />
-          </Logo>
+      <DivLeft>
+        <Logo>
+          <img src={LogoBF} alt="" />
+        </Logo>
 
-          <FormLogin ref={formRef} onSubmit={handleSubmit}>
-            <InputEmail
-              name="email"
-              type="email"
-              icon={faUser}
-              placeholder="Usuário"
-            />
+        <FormLogin ref={formRef} onSubmit={handleSubmit}>
+          <InputEmail
+            name="email"
+            type="email"
+            icon={faUser}
+            placeholder="Usuário"
+          />
 
-            <InputPassword
-              name="password"
-              type="password"
-              icon={faLock}
-              placeholder="Senha"
-            />
+          <InputPassword
+            name="password"
+            type="password"
+            icon={faLock}
+            placeholder="Senha"
+          />
 
-            <Link to="/">esqueceu sua senha?</Link>
+          <Link to="/">esqueceu sua senha?</Link>
 
-            <ButtonPrimary type="submit">
-              {loading ? (
-                <FontAwesomeIcon icon={faSpinner} spin />
-              ) : (
-                <span>Entrar</span>
-              )}
-            </ButtonPrimary>
-          </FormLogin>
-        </DivLeft>
-        <DivRight>
-          <img src={PictureLogin} alt="" />
-        </DivRight>
-      </Container>
+          <ButtonPrimary type="submit">
+            {loading ? (
+              <FontAwesomeIcon icon={faSpinner} spin />
+            ) : (
+              <span>Entrar</span>
+            )}
+          </ButtonPrimary>
+        </FormLogin>
+      </DivLeft>
+      <DivRight>
+        <img src={PictureLogin} alt="" />
+      </DivRight>
     </Wrapper>
   );
 };

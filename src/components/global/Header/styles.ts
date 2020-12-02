@@ -17,8 +17,8 @@ export const Logo = styled.div`
   border-right: 1px solid ${colors.border};
 
   img {
-    width: auto;
-    height: auto;
+    width: 150%;
+    height: 100%;
     cursor: pointer;
   }
 `;
@@ -52,9 +52,10 @@ export const Navigation = styled.div`
     margin-left: 30px;
     cursor: pointer;
     text-decoration: none;
-  }
-  a.active {
-    color: ${colors.primary};
+
+    &.active {
+      color: ${colors.primary};
+    }
   }
 `;
 
