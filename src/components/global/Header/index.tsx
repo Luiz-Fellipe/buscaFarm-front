@@ -10,6 +10,7 @@ import {
 import LogoHorizontal from '~/assets/images/BuscaFarmLogoHorizontal.svg';
 
 import { useAuth } from '~/context/AuthContext';
+/* */
 
 import {
   HeaderApplication,
