@@ -7,9 +7,10 @@ import {
   faBell,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
-import LogoBF from '~/assets/images/Logo.png';
+import LogoHorizontal from '~/assets/images/BuscaFarmLogoHorizontal.svg';
 
 import { useAuth } from '~/context/AuthContext';
+/* */
 
 import {
   HeaderApplication,
@@ -27,8 +28,8 @@ const Header: React.FC = () => {
   return (
     <HeaderApplication>
       <Logo>
-        <NavLink to="/login">
-          <img src={LogoBF} alt="" />
+        <NavLink to="/medicamentos">
+          <img src={LogoHorizontal} alt="" />
         </NavLink>
       </Logo>
       <Navigation>

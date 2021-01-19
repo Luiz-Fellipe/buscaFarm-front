@@ -9,6 +9,8 @@ interface ContainerProps {
 
 export const Wrapper = styled.div`
   display: flex;
+  width: 50%;
+  margin-bottom: 20px;
   flex-direction: column;
 
   span {
