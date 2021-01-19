@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useEffect, useState } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import {
   faArrowLeft,
   faCheck,
@@ -11,8 +11,6 @@ import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { useHistory, Link } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
-import Swal from 'sweetalert2';
-import colors from '~/styles/colors';
 
 import {
   Wrapper,
@@ -28,7 +26,7 @@ import ButtonSecondary from '~/components/global/ButtonSecondary';
 import ContainerWithBordes from '~/components/ContainerWithBordes';
 import api from '~/services/api';
 import Input from '~/components/Input';
-import SimpleSelect from '~/components/global/SimpleSelect';
+import AsyncSelect from '~/components/global/Selects/AsyncSelect';
 import { useAuth } from '~/context/AuthContext';
 import { useToast } from '~/context/ToastContext';
 import getValidationErrors from '~/utils/getValidationsErrors';
@@ -47,6 +45,7 @@ const EmployeeRegistration: React.FC = () => {
   const history = useHistory();
   const { pharmacie }: { pharmacie: any } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [loadingEmplPos, setLoadingEmplPos] = useState(false);
   const [employeePositions, setEmployeePositions] = useState<[{}]>([{}]);
   const { addToast } = useToast();
   const formRef = useRef<FormHandles>(null);
@@ -104,30 +103,42 @@ const EmployeeRegistration: React.FC = () => {
     [pharmacie, history, addToast],
   );
 
-  const loadEmployeePositions = useCallback(async () => {
-    try {
-      const {
-        data: { employeesPosition },
-      } = await api.get('/employees/position');
+  const loadEmployeePositions = useCallback(
+    async (inputValue?: string, callback?: Function) => {
+      try {
+        setLoadingEmplPos(true);
+        const {
+          data: { data },
+        } = await api.get('/employees/position', {
+          params: {
+            pageStart: 0,
+            search: inputValue || '',
+            pageLength: 10,
+          },
+        });
 
-      const options = employeesPosition.map(
-        ({ id, name }: EmployeePositionProps) => ({
+        const options = data.map(({ id, name }: EmployeePositionProps) => ({
           value: id,
           label: name,
-        }),
-      );
+        }));
 
-      setEmployeePositions(options);
-    } catch (e) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro !',
-        text: 'Não foi possivel listar os cargos. tente novamente mais tarde',
-        confirmButtonText: 'Ok',
-        confirmButtonColor: `${colors.primary}`,
-      });
-    }
-  }, []);
+        if (inputValue && callback) {
+          callback(options);
+        } else {
+          setEmployeePositions(options);
+        }
+        setLoadingEmplPos(false);
+      } catch (e) {
+        setLoadingEmplPos(false);
+        addToast({
+          type: 'error',
+          title: 'Erro ao buscar os cargos',
+          description: 'Ocorreu um erro ao buscar os cargos.',
+        });
+      }
+    },
+    [addToast],
+  );
 
   useEffect(() => {
     loadEmployeePositions();
@@ -155,27 +166,33 @@ const EmployeeRegistration: React.FC = () => {
       </Wrapper>
       <ContainerWithBordes
         widthPercent="70"
-        heightPercent="54"
+        heightPercent="42"
         borderHeightPx="81"
         borderWidthPx="12"
       >
         <Container>
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <Input
-              name="name"
-              icon={faUser}
-              placeholder="Nome do funcionário"
-            />
             <InputGroup>
+              <Input
+                name="name"
+                icon={faUser}
+                placeholder="Nome do funcionário"
+              />
               <Input name="email" icon={faEnvelope} placeholder="E-mail" />
               {/* <Input name="office" icon={faBriefcase} placeholder="Cargo" /> */}
-              <SimpleSelect
+            </InputGroup>
+            <InputGroup>
+              <Input name="phone" icon={faPhone} placeholder="Telefone" />
+              <AsyncSelect
+                isLoading={loadingEmplPos}
                 placeholder="Cargo"
-                defaultInputValue=""
+                defaultOptions={employeePositions}
+                loadOptions={loadEmployeePositions}
                 fieldName="employee_position_id"
                 name="employee_position_id"
-                options={employeePositions}
               />
+            </InputGroup>
+            <InputGroup>
               <Input
                 name="password"
                 type="password"
@@ -189,7 +206,7 @@ const EmployeeRegistration: React.FC = () => {
                 placeholder="Confirmar Senha"
               />
             </InputGroup>
-            <Input name="phone" icon={faPhone} placeholder="Telefone" />
+
             <Save>
               <ButtonSecondary icon={faCheck} loading={loading}>
                 <span>Salvar</span>

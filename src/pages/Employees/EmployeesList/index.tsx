@@ -22,7 +22,6 @@ import {
   Input,
   ButtonEdit,
   ButtonDelete,
-  NoHaveEmployee,
 } from './styles';
 
 import Table from '~/components/global/Table';
@@ -30,7 +29,6 @@ import InputSearch from '~/components/global/InputSearch';
 import colors from '~/styles/colors';
 import api from '~/services/api';
 import { AindaSwal } from '~/components/global/AindaSwal';
-import BoxLoading from '~/components/global/BoxLoading';
 
 interface EmployeePositionProps {
   name: string;
@@ -51,7 +49,7 @@ interface PageProps {
   searchValue: string;
 }
 
-const LIMIT_PER_PAGE = 1;
+const LIMIT_PER_PAGE = 7;
 
 const EmployeesList: React.FC = () => {
   const [employeesOrganization, setEmployeesOrganization] = useState([]);
@@ -63,7 +61,7 @@ const EmployeesList: React.FC = () => {
   });
   const { addToast } = useToast();
 
-  const Searching =
+  const searching: string | boolean =
     !loading && pageState.searchValue && !employeesOrganization.length;
 
   const existEmployees = !loading && !!employeesOrganization.length;
@@ -187,45 +185,35 @@ const EmployeesList: React.FC = () => {
         </Functionalities>
       </Header>
 
-      {loading && (
-        <NoHaveEmployee>
-          <BoxLoading loading />
-        </NoHaveEmployee>
-      )}
+      <Table
+        titles={['NOME', 'EMAIL', 'CARGO', 'AÇÕES']}
+        handleChangePage={handleChangePage}
+        totalPages={totalPage}
+        currentPage={pageState.pageStart}
+        searching={searching}
+        existData={existEmployees}
+        loading={loading}
+      >
+        {employeesOrganization.map((employee: EmployeerProps) => (
+          <div key={employee.id}>
+            <span>{employee.user.name}</span>
+            <span>{employee.user.email}</span>
+            <span>{employee.employee_position.name}</span>
+            <div>
+              <ButtonEdit to={`funcionarios/editar/${employee.id}`}>
+                <FontAwesomeIcon icon={faPencilAlt} />
+              </ButtonEdit>
 
-      {Searching && (
-        <NoHaveEmployee>
-          <span>{`Não encontramos o resultado para sua busca '${pageState.searchValue}'.`}</span>
-        </NoHaveEmployee>
-      )}
-      {existEmployees && (
-        <Table
-          titles={['NOME', 'EMAIL', 'CARGO', 'AÇÕES']}
-          handleChangePage={handleChangePage}
-          totalPages={totalPage}
-          currentPage={pageState.pageStart}
-        >
-          {employeesOrganization.map((employee: EmployeerProps) => (
-            <tr key={employee.id}>
-              <td>{employee.user.name}</td>
-              <td>{employee.user.email}</td>
-              <td>{employee.employee_position.name}</td>
-              <td>
-                <ButtonEdit to={`funcionarios/editar/${employee.id}`}>
-                  <FontAwesomeIcon icon={faPencilAlt} />
-                </ButtonEdit>
-
-                <ButtonDelete
-                  onClick={() => handleDelete(employee.user.id)}
-                  type="button"
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </ButtonDelete>
-              </td>
-            </tr>
-          ))}
-        </Table>
-      )}
+              <ButtonDelete
+                onClick={() => handleDelete(employee.user.id)}
+                type="button"
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </ButtonDelete>
+            </div>
+          </div>
+        ))}
+      </Table>
     </Wrapper>
   );
 };

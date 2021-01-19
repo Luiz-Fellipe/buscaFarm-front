@@ -59,7 +59,7 @@ export const Navigation = styled.div`
   }
 `;
 
-export const NameProfile = styled.div`
+export const Profile = styled.div`
   display: flex;
   width: 11%;
   margin-right: 10px;
@@ -83,9 +83,28 @@ export const NameProfile = styled.div`
       line-height: 16px;
       color: ${colors.gray};
     }
-    div {
-      img {
-        display: flex;
+
+    > img {
+      background: ${colors.grayLigth};
+      display: flex;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid ${colors.primary};
+    }
+
+    > div.no-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: ${colors.white};
+      border: 2px solid ${colors.primary};
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      svg {
+        font-size: 25px;
+        color: #000;
       }
     }
   }
