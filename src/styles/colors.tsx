@@ -14,4 +14,6 @@ export default {
   yellow: '#F2C94C',
 
   red: '#EB5757',
+
+  body: '#eeeeee',
 };

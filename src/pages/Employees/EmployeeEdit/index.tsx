@@ -6,7 +6,6 @@ import {
   faCheck,
   faUser,
   faEnvelope,
-  faLock,
   faPhone,
 } from '@fortawesome/free-solid-svg-icons';
 import { Form } from '@unform/web';

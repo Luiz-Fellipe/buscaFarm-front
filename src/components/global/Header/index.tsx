@@ -39,7 +39,7 @@ const Header: React.FC = () => {
         <NavLink to="/funcionarios">FUNCIONÁRIOS</NavLink>
         <NavLink to="/orcamentos">ORÇAMENTOS</NavLink>
       </Navigation>
-      <Profile>
+      <Profile href="perfil">
         <div>
           <h5>{employee.user.name}</h5>
           <span>{employee.employee_position.name}</span>

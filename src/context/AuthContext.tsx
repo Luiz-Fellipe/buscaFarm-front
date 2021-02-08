@@ -4,6 +4,11 @@ import { useToast } from '~/context/ToastContext';
 
 interface User {
   name: string;
+  email: string;
+  avatar: string;
+  phone: string;
+  created_at: string;
+  updated_at: string;
   avatar_url: string;
 }
 
@@ -32,6 +37,7 @@ interface AuthContextData {
   pharmacie: object;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
+  updateEmployee(user: User): void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -93,6 +99,27 @@ const AuthProvider: React.FC = ({ children }) => {
     setData({} as AuthState);
   }, []);
 
+  const updateEmployee = useCallback(
+    (user: User) => {
+      const updatedEmployee = {
+        ...data.employee,
+        user,
+      };
+
+      localStorage.setItem(
+        '@BuscaFarm:employee',
+        JSON.stringify(updatedEmployee),
+      );
+
+      setData({
+        token: data.token,
+        employee: updatedEmployee,
+        pharmacie: data.pharmacie,
+      });
+    },
+    [setData, data.token, data.pharmacie, data.employee],
+  );
+
   return (
     <AuthContext.Provider
       value={{
@@ -100,6 +127,7 @@ const AuthProvider: React.FC = ({ children }) => {
         pharmacie: data.pharmacie,
         signIn,
         signOut,
+        updateEmployee,
       }}
     >
       {children}

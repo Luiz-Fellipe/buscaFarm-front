@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useField } from '@unform/core';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { InputWrapper, Wrapper } from './styles';
+import { InputWrapper, SpanError } from './styles';
 
 interface Props {
   name: string;
@@ -10,7 +10,7 @@ interface Props {
   icon: IconProp;
 }
 
-type InputProps = JSX.IntrinsicElements['input'] & Props;
+export type InputProps = JSX.IntrinsicElements['input'] & Props;
 
 const Input: React.FC<InputProps> = ({ name, label, icon, ...rest }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,7 +36,7 @@ const Input: React.FC<InputProps> = ({ name, label, icon, ...rest }) => {
   }, [fieldName, registerField]);
 
   return (
-    <Wrapper>
+    <>
       <InputWrapper isFilled={isFilled} isFocused={isFocused} error={error}>
         {label && <label htmlFor={fieldName}>{label}</label>}
         {icon && <FontAwesomeIcon icon={icon} />}
@@ -50,8 +50,8 @@ const Input: React.FC<InputProps> = ({ name, label, icon, ...rest }) => {
           {...rest}
         />
       </InputWrapper>
-      <span>{error}</span>
-    </Wrapper>
+      <SpanError>{error}</SpanError>
+    </>
   );
 };
 
