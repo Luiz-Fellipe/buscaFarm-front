@@ -49,7 +49,7 @@ interface DataProps extends Request {
     password?: string;
   };
   password?: string;
-  oldPassword?: string;
+  old_password?: string;
 }
 
 const Profile: React.FC = () => {
@@ -102,7 +102,7 @@ const Profile: React.FC = () => {
             'Password must be at least 8 characters',
           ),
 
-          oldPassword: Yup.string().min(
+          old_password: Yup.string().min(
             8,
             'Password must be at least 8 characters',
           ),
@@ -115,7 +115,7 @@ const Profile: React.FC = () => {
         const {
           user: { name, email, phone },
           password,
-          oldPassword,
+          old_password,
         } = data;
 
         await api.put('/employees/edit', {
@@ -124,7 +124,7 @@ const Profile: React.FC = () => {
           email,
           phone,
           password,
-          oldPassword,
+          old_password,
         });
 
         updateEmployee({
@@ -240,7 +240,7 @@ const Profile: React.FC = () => {
             <InputGroup>
               <fieldset>
                 <InputProfile
-                  name="oldPassword"
+                  name="old_password"
                   icon={faLock}
                   placeholder="Senha Antiga"
                   type="password"
