@@ -59,11 +59,12 @@ export const Navigation = styled.div`
   }
 `;
 
-export const Profile = styled.div`
+export const Profile = styled.a`
   display: flex;
   width: 11%;
   margin-right: 10px;
   border-right: 1px solid ${colors.border};
+  text-decoration: none;
 
   div {
     display: flex;
@@ -74,6 +75,7 @@ export const Profile = styled.div`
     h5 {
       font-size: 14px;
       line-height: 16px;
+      text-decoration: none;
     }
 
     span {
@@ -91,6 +93,7 @@ export const Profile = styled.div`
       height: 50px;
       border-radius: 50%;
       border: 2px solid ${colors.primary};
+      object-fit: cover;
     }
 
     > div.no-avatar {

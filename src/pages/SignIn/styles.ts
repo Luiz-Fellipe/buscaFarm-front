@@ -34,7 +34,7 @@ export const FormLogin = styled(Form)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 80%;
+  width: 50%;
 
   a {
     color: ${colors.primary};

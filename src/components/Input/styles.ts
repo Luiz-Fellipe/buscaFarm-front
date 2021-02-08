@@ -9,8 +9,9 @@ interface ContainerProps {
 
 export const Wrapper = styled.div`
   display: flex;
-  width: 50%;
   margin-bottom: 20px;
+  width: 100%;
+  align-items: center;
   flex-direction: column;
 
   span {
@@ -26,6 +27,7 @@ export const InputWrapper = styled.div<ContainerProps>`
   border: 2px solid #d9d9d9;
   padding: 16px;
   width: 100%;
+  margin-bottom: 20px;
   align-items: center;
   color: #666369;
 
@@ -69,4 +71,9 @@ export const InputWrapper = styled.div<ContainerProps>`
   svg {
     margin-right: 16px;
   }
+`;
+
+export const SpanError = styled.span`
+  color: ${colors.red};
+  font-weight: bold;
 `;
