@@ -21,6 +21,7 @@ import {
   Container,
   InputGroup,
   Save,
+  ContainerLoading,
 } from './styles';
 import ButtonLink from '~/components/global/ButtonLink';
 import ButtonSecondary from '~/components/global/ButtonSecondary';
@@ -29,6 +30,7 @@ import Input from '~/components/Input';
 import api from '~/services/api';
 import { useToast } from '~/context/ToastContext';
 import getValidationErrors from '~/utils/getValidationsErrors';
+import BoxLoading from '~/components/global/BoxLoading';
 
 interface EmployeePositionProps {
   id?: string;
@@ -50,15 +52,14 @@ const MedicineEdit: React.FC = () => {
 
   const [medicineEdit, setMedicineEdit] = useState<object>({});
   const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
 
   const handleSubmit = useCallback(
-    async (data: Request) => {
+    async ({ amount, price }) => {
       try {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          name: Yup.string().required('Nome do Medicamento Obrigatório'),
-          manufacturer: Yup.string().required('Nome do Fabricante Obrigatório'),
           amount: Yup.number()
             .required('Quantidade obrigatória')
             .min(0, 'A quantidade minima é 0'),
@@ -67,15 +68,19 @@ const MedicineEdit: React.FC = () => {
             .min(0, 'O preço minimo é 0'),
         });
 
-        await schema.validate(data, {
-          abortEarly: false,
-        });
+        await schema.validate(
+          { amount, price },
+          {
+            abortEarly: false,
+          },
+        );
 
         setLoading(true);
 
-        await api.put('/medicines/edit', {
-          ...data,
-          id,
+        await api.put('/pharmacies/medicines/edit', {
+          amount,
+          price,
+          medicine_id: id,
         });
 
         addToast({
@@ -103,18 +108,24 @@ const MedicineEdit: React.FC = () => {
 
   const getMedicine = useCallback(async () => {
     try {
+      setLoadingData(true);
       const {
         data: {
-          medicine: { name, manufacturer, price, amount },
+          medicine: { name, manufacturer },
+          amount,
+          price,
         },
-      } = await api.get(`/medicines/${id}`);
+      } = await api.get(`pharmacies/medicines/${id}`);
+
       setMedicineEdit({
         name,
         manufacturer,
-        price,
         amount,
+        price,
       });
+      setLoadingData(false);
     } catch {
+      setLoadingData(false);
       addToast({
         type: 'error',
         title: 'Erro ao trazer dados do medicamento',
@@ -153,43 +164,51 @@ const MedicineEdit: React.FC = () => {
         borderWidthPx="12"
       >
         <Container>
-          <Form
-            ref={formRef}
-            initialData={medicineEdit}
-            onSubmit={handleSubmit}
-          >
-            <InputGroup>
-              <Input
-                name="name"
-                icon={faPills}
-                placeholder="Nome do Medicamento"
-              />
-              <Input
-                name="manufacturer"
-                icon={faIndustry}
-                placeholder="Nome do Fabricante"
-              />
-            </InputGroup>
-            <InputGroup>
-              <Input
-                name="amount"
-                icon={faSortAmountUpAlt}
-                placeholder="Quantidade do Medicamento"
-              />
+          {!loadingData ? (
+            <Form
+              ref={formRef}
+              initialData={medicineEdit}
+              onSubmit={handleSubmit}
+            >
+              <InputGroup>
+                <Input
+                  name="name"
+                  icon={faPills}
+                  disabled
+                  placeholder="Nome do Medicamento"
+                />
+                <Input
+                  name="manufacturer"
+                  disabled
+                  icon={faIndustry}
+                  placeholder="Nome do Fabricante"
+                />
+              </InputGroup>
+              <InputGroup>
+                <Input
+                  name="amount"
+                  icon={faSortAmountUpAlt}
+                  placeholder="Quantidade do Medicamento"
+                />
 
-              <Input
-                name="price"
-                icon={faDollarSign}
-                placeholder="Preço do medicamento"
-              />
-            </InputGroup>
+                <Input
+                  name="price"
+                  icon={faDollarSign}
+                  placeholder="Preço do medicamento"
+                />
+              </InputGroup>
 
-            <Save>
-              <ButtonSecondary icon={faCheck} loading={loading}>
-                <span>Salvar</span>
-              </ButtonSecondary>
-            </Save>
-          </Form>
+              <Save>
+                <ButtonSecondary icon={faCheck} loading={loading}>
+                  <span>Salvar</span>
+                </ButtonSecondary>
+              </Save>
+            </Form>
+          ) : (
+            <ContainerLoading>
+              <BoxLoading loading />
+            </ContainerLoading>
+          )}
         </Container>
       </ContainerWithBordes>
     </>

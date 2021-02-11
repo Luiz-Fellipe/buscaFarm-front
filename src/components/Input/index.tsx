@@ -12,7 +12,13 @@ interface Props {
 
 export type InputProps = JSX.IntrinsicElements['input'] & Props;
 
-const Input: React.FC<InputProps> = ({ name, label, icon, ...rest }) => {
+const Input: React.FC<InputProps> = ({
+  name,
+  label,
+  icon,
+  disabled,
+  ...rest
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
@@ -37,7 +43,12 @@ const Input: React.FC<InputProps> = ({ name, label, icon, ...rest }) => {
 
   return (
     <>
-      <InputWrapper isFilled={isFilled} isFocused={isFocused} error={error}>
+      <InputWrapper
+        isFilled={isFilled}
+        isFocused={isFocused}
+        isDisabled={disabled}
+        error={error}
+      >
         {label && <label htmlFor={fieldName}>{label}</label>}
         {icon && <FontAwesomeIcon icon={icon} />}
         <input
@@ -45,12 +56,14 @@ const Input: React.FC<InputProps> = ({ name, label, icon, ...rest }) => {
           onBlur={handleInputBlur}
           id={fieldName}
           ref={inputRef}
+          disabled={disabled}
           defaultValue={defaultValue}
           autoComplete="off"
           {...rest}
         />
       </InputWrapper>
-      <SpanError>{error}</SpanError>
+
+      {error && <SpanError>{error}</SpanError>}
     </>
   );
 };

@@ -84,7 +84,6 @@ const Profile: React.FC = () => {
   const handleSubmit = useCallback(
     async (data: DataProps) => {
       try {
-        console.log('data', data);
         formRef.current?.setErrors({});
         setLoading(true);
 
@@ -97,14 +96,16 @@ const Profile: React.FC = () => {
               .email('Digite um e-mail válido'),
           }),
 
-          password: Yup.string().min(
-            8,
+          old_password: Yup.string().test(
+            'password-empty',
             'Password must be at least 8 characters',
+            password =>
+              password ? password.length >= 8 : password?.length === 0,
           ),
-
-          old_password: Yup.string().min(
-            8,
-            'Password must be at least 8 characters',
+          password: Yup.string().when(
+            'old_password',
+            (old_password: any, field: any) =>
+              old_password ? field.required('Informe a nova senha') : field,
           ),
         });
 
@@ -144,7 +145,6 @@ const Profile: React.FC = () => {
 
         history.push('/funcionarios');
       } catch (err) {
-        console.log(err);
         const errors = getValidationErrors(err);
         formRef.current?.setErrors(errors);
         setLoading(false);

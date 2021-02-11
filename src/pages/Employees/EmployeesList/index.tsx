@@ -29,6 +29,7 @@ import InputSearch from '~/components/global/InputSearch';
 import colors from '~/styles/colors';
 import api from '~/services/api';
 import { AindaSwal } from '~/components/global/AindaSwal';
+import { useAuth } from '~/context/AuthContext';
 
 interface EmployeePositionProps {
   name: string;
@@ -60,6 +61,8 @@ const EmployeesList: React.FC = () => {
     searchValue: '',
   });
   const { addToast } = useToast();
+
+  const { employee: employeeLogged } = useAuth();
 
   const searching: string | boolean =
     !loading && pageState.searchValue && !employeesOrganization.length;
@@ -200,13 +203,16 @@ const EmployeesList: React.FC = () => {
             <span>{employee.user.email}</span>
             <span>{employee.employee_position.name}</span>
             <div>
-              <ButtonEdit to={`funcionarios/editar/${employee.id}`}>
-                <FontAwesomeIcon icon={faPencilAlt} />
-              </ButtonEdit>
+              {employee.id !== employeeLogged.id && (
+                <ButtonEdit to={`funcionarios/editar/${employee.id}`}>
+                  <FontAwesomeIcon icon={faPencilAlt} />
+                </ButtonEdit>
+              )}
 
               <ButtonDelete
                 onClick={() => handleDelete(employee.user.id)}
                 type="button"
+                disabled={employee.id === employeeLogged.id}
               >
                 <FontAwesomeIcon icon={faTrash} />
               </ButtonDelete>

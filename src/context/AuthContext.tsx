@@ -17,6 +17,7 @@ interface EmployeePosition {
 }
 
 interface Employee {
+  id?: string;
   user: User;
   employee_position: EmployeePosition;
 }

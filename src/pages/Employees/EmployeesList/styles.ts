@@ -55,4 +55,9 @@ export const ButtonDelete = styled.button`
   color: ${colors.white};
   border: none;
   border-radius: 4px;
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 `;
