@@ -39,10 +39,15 @@ interface PageProps {
 
 interface MedicineProps {
   id: string;
-  name: string;
-  manufacturer: string;
+
   price: number;
   amount: number;
+  medicine: {
+    id: string;
+    name: string;
+    manufacturer: string;
+    image_url: string;
+  };
 }
 
 const LIMIT_PER_PAGE = 7;
@@ -68,7 +73,7 @@ const MedicineList: React.FC = () => {
       setLoading(true);
       const {
         data: { data, count },
-      } = await api.get('/medicines', {
+      } = await api.get('/pharmacies/medicines', {
         params: {
           pageStart: (pageState.pageStart - 1) * LIMIT_PER_PAGE,
           pageLength: LIMIT_PER_PAGE,
@@ -190,23 +195,29 @@ const MedicineList: React.FC = () => {
         loading={loading}
         searching={searching}
       >
-        {medicines.map((medicine: MedicineProps) => (
-          <div key={medicine.id}>
-            <span>{medicine.name}</span>
-            <span>{medicine.manufacturer}</span>
-            <span>{formatCurrency('pt-br', 'BRL', medicine.price)}</span>
-            <span>{medicine.amount}</span>
+        {medicines.map((pharmacieMedicine: MedicineProps) => (
+          <div key={pharmacieMedicine.medicine.id}>
+            <span style={{ textTransform: 'capitalize' }}>
+              {pharmacieMedicine.medicine.name}
+            </span>
+            <span style={{ textTransform: 'capitalize' }}>
+              {pharmacieMedicine.medicine.manufacturer}
+            </span>
+            <span>
+              {formatCurrency('pt-br', 'BRL', pharmacieMedicine.price)}
+            </span>
+            <span>{pharmacieMedicine.amount}</span>
             <div>
               <ButtonEdit
                 type="button"
-                to={`/medicamentos/editar/${medicine.id}`}
+                to={`/medicamentos/editar/${pharmacieMedicine.medicine.id}`}
               >
                 <FontAwesomeIcon icon={faPencilAlt} />
               </ButtonEdit>
 
               <ButtonDelete
                 type="button"
-                onClick={() => handleDelete(medicine.id)}
+                onClick={() => handleDelete(pharmacieMedicine.medicine.id)}
               >
                 <FontAwesomeIcon icon={faTrash} />
               </ButtonDelete>

@@ -39,8 +39,6 @@ export const InputGroup = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  margin-top: 15px;
-  margin-bottom: 15px;
 
   > fieldset {
     border: none;
@@ -50,7 +48,7 @@ export const InputGroup = styled.div`
 export const Save = styled.div`
   display: flex;
   justify-content: flex-end;
-  /* margin-top: 60px; */
+  margin-top: 50px;
 `;
 
 export const Avatar = styled.div`

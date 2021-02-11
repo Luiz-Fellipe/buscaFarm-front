@@ -4,6 +4,7 @@ import colors from '~/styles/colors';
 interface ContainerProps {
   isFocused: boolean;
   isFilled: boolean;
+  isDisabled: boolean | undefined;
   error?: string;
 }
 
@@ -25,11 +26,17 @@ export const InputWrapper = styled.div<ContainerProps>`
   background: ${colors.white};
   border-radius: 10px;
   border: 2px solid #d9d9d9;
-  padding: 16px;
   width: 100%;
   margin-bottom: 20px;
   align-items: center;
   color: #666369;
+
+ ${props =>
+   props.isDisabled &&
+   css`
+     background-color: rgba(0, 0, 0, 0.06);
+     cursor: not-allowed;
+   `}
 
   ${props =>
     props.error &&
@@ -58,7 +65,7 @@ export const InputWrapper = styled.div<ContainerProps>`
     background: transparent;
     border: 0;
     color: #666360;
-
+    padding: 16px;
     &::placeholder {
       color: #666360;
     }
@@ -66,10 +73,15 @@ export const InputWrapper = styled.div<ContainerProps>`
     &::-webkit-input-placeholder {
       text-align: center;
     }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
   }
 
   svg {
     margin-right: 16px;
+    margin-left: 16px;
   }
 `;
 

@@ -30,6 +30,8 @@ export const ButtonBackAndSave = styled.div`
 
 export const Container = styled.div`
   padding: 40px 20px;
+  display: block;
+  height: 100%;
 `;
 
 export const InputGroup = styled.div`
@@ -44,4 +46,11 @@ export const Save = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-top: 30px;
+`;
+
+export const ContainerLoading = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 `;

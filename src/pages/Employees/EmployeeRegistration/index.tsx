@@ -173,38 +173,50 @@ const EmployeeRegistration: React.FC = () => {
         <Container>
           <Form ref={formRef} onSubmit={handleSubmit}>
             <InputGroup>
-              <Input
-                name="name"
-                icon={faUser}
-                placeholder="Nome do funcionário"
-              />
-              <Input name="email" icon={faEnvelope} placeholder="E-mail" />
+              <fieldset>
+                <Input
+                  name="name"
+                  icon={faUser}
+                  placeholder="Nome do funcionário"
+                />
+              </fieldset>
+              <fieldset>
+                <Input name="email" icon={faEnvelope} placeholder="E-mail" />
+              </fieldset>
               {/* <Input name="office" icon={faBriefcase} placeholder="Cargo" /> */}
             </InputGroup>
             <InputGroup>
-              <Input name="phone" icon={faPhone} placeholder="Telefone" />
-              <AsyncSelect
-                isLoading={loadingEmplPos}
-                placeholder="Cargo"
-                defaultOptions={employeePositions}
-                loadOptions={loadEmployeePositions}
-                fieldName="employee_position_id"
-                name="employee_position_id"
-              />
+              <fieldset>
+                <Input name="phone" icon={faPhone} placeholder="Telefone" />
+              </fieldset>
+              <fieldset>
+                <AsyncSelect
+                  isLoading={loadingEmplPos}
+                  placeholder="Cargo"
+                  defaultOptions={employeePositions}
+                  loadOptions={loadEmployeePositions}
+                  fieldName="employee_position_id"
+                  name="employee_position_id"
+                />
+              </fieldset>
             </InputGroup>
             <InputGroup>
-              <Input
-                name="password"
-                type="password"
-                icon={faLock}
-                placeholder="Senha"
-              />
-              <Input
-                name="confirmPassword"
-                type="password"
-                icon={faLock}
-                placeholder="Confirmar Senha"
-              />
+              <fieldset>
+                <Input
+                  name="password"
+                  type="password"
+                  icon={faLock}
+                  placeholder="Senha"
+                />
+              </fieldset>
+              <fieldset>
+                <Input
+                  name="confirmPassword"
+                  type="password"
+                  icon={faLock}
+                  placeholder="Confirmar Senha"
+                />
+              </fieldset>
             </InputGroup>
 
             <Save>

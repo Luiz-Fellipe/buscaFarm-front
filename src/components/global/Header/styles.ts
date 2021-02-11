@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import colors from '~/styles/colors';
 
@@ -59,13 +60,13 @@ export const Navigation = styled.div`
   }
 `;
 
-export const Profile = styled.a`
+export const Profile = styled(Link)`
   display: flex;
   width: 11%;
   margin-right: 10px;
   border-right: 1px solid ${colors.border};
   text-decoration: none;
-
+  color: inherit;
   div {
     display: flex;
     justify-content: center;

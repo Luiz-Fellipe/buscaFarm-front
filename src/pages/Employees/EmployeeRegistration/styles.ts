@@ -38,6 +38,10 @@ export const InputGroup = styled.div`
   gap: 20px;
   margin-top: 15px;
   margin-bottom: 15px;
+
+  > fieldset {
+    border: none;
+  }
 `;
 
 export const Save = styled.div`
