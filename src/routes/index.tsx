@@ -10,6 +10,7 @@ import EmployeeEdit from '~/pages/Employees/EmployeeEdit';
 import MedicineRegistration from '~/pages/Medicines/MedicineRegistration';
 import MedicineEdit from '~/pages/Medicines/MedicineEdit';
 import Profile from '~/pages/Profile';
+import MedicineImport from '~/pages/Medicines/MedicineImport';
 
 const Routes: React.FC = () => (
   <Switch>
@@ -21,6 +22,7 @@ const Routes: React.FC = () => (
       component={MedicineRegistration}
       isPrivate
     />
+    <Route path="/medicamentos/importar" component={MedicineImport} isPrivate />
 
     <Route path="/medicamentos/editar/:id" component={MedicineEdit} isPrivate />
     <Route path="/perfil" component={Profile} isPrivate />
