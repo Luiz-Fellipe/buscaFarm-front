@@ -15,6 +15,9 @@ interface User {
 interface EmployeePosition {
   name: string;
 }
+interface Pharmacie {
+  id: string;
+}
 
 interface Employee {
   id?: string;
@@ -25,7 +28,7 @@ interface Employee {
 interface AuthState {
   token: string;
   employee: Employee;
-  pharmacie: object;
+  pharmacie: Pharmacie;
 }
 
 interface SignInCredentials {
@@ -35,7 +38,7 @@ interface SignInCredentials {
 
 interface AuthContextData {
   employee: Employee;
-  pharmacie: object;
+  pharmacie: Pharmacie;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
   updateEmployee(user: User): void;
