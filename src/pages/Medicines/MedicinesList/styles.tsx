@@ -28,13 +28,13 @@ export const Input = styled.div`
   width: 30%;
 `;
 
-export const ButtonAdd = styled.button`
+export const ButtonAdd = styled(Link)`
   background: ${colors.primary};
   padding: 15px 20px;
   border-radius: 10px;
   color: ${colors.white};
   border: none;
-
+  text-decoration: none;
   svg {
     margin-right: 20px;
   }
@@ -55,4 +55,14 @@ export const ButtonEdit = styled(Link)`
   border: none;
   border-radius: 4px;
   margin-right: 10px;
+`;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  > a:not(:first-child) {
+    margin-left: 10px;
+  }
 `;
