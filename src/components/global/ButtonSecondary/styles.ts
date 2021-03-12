@@ -5,11 +5,11 @@ export const Button = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
-  width: 10%;
+  padding: 15px 10px;
   background: ${colors.primary};
   color: ${colors.white};
   border: none;
+  border-radius: 10px;
 
   svg {
     margin-right: 15px;

@@ -7,9 +7,10 @@ export const Button = styled(Link)`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 20px;
+  padding: 15px 20px;
 
   border: none;
+  border-radius: 10px;
 
   &.primary {
     background: ${colors.gray};
