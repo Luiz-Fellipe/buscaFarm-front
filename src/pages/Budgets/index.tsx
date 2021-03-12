@@ -6,6 +6,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import { debounce } from 'lodash';
 import Table from '~/components/global/Table';
 import exclamationSvg from '~/assets/icons/exclamation-mark.svg';
 import { AindaSwal } from '~/components/global/AindaSwal';
@@ -25,7 +26,9 @@ import {
 // import colors from '~/styles/colors';
 import { useAuth } from '~/context/AuthContext';
 import api from '~/services/api';
+
 import { useToast } from '~/context/ToastContext';
+import { parseDate } from '~/utils/formatDate';
 
 interface PageProps {
   pageStart: number;
@@ -44,7 +47,6 @@ interface BudgetsProps {
 const LIMIT_PER_PAGE = 7;
 
 const Budgets: React.FC = () => {
-  const [budgetsOrganization, setBudgetsOrganization] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalPage, setTotalPage] = useState(1);
   const [budgets, setBudgets] = useState([]);
@@ -55,13 +57,40 @@ const Budgets: React.FC = () => {
   });
 
   const searching: string | boolean =
-    !loading && pageState.searchValue && !budgetsOrganization.length;
+    !loading && pageState.searchValue && !budgets.length;
 
-  const existBudgets = !loading && !!budgetsOrganization.length;
+  const existBudgets = !loading && !!budgets.length;
 
   const { addToast } = useToast();
 
   const { pharmacie } = useAuth();
+
+  const loadBudgets = useCallback(async () => {
+    try {
+      setLoading(true);
+      const {
+        data: { data, count },
+      } = await api.get('/budgets', {
+        params: {
+          pageStart: (pageState.pageStart - 1) * LIMIT_PER_PAGE,
+          pageLength: LIMIT_PER_PAGE,
+          search: pageState.searchValue,
+          pharmacie_id: pharmacie.id,
+        },
+      });
+      setBudgets(data);
+      setTotalPage(Math.ceil(count / LIMIT_PER_PAGE));
+      setLoading(false);
+    } catch {
+      setLoading(false);
+      addToast({
+        type: 'error',
+        title: 'Erro ao carregar Orçamentos',
+        description:
+          'Não foi possivel carregar a lista de orçamentos. tente novamente mais tarde',
+      });
+    }
+  }, [addToast, pageState, pharmacie.id]);
 
   function handleDelete(id: string) {
     AindaSwal.fire({
@@ -83,8 +112,8 @@ const Budgets: React.FC = () => {
 
           .then((res: any) => {
             if (res.status === 204) {
-              setBudgetsOrganization(
-                budgetsOrganization.filter(
+              setBudgets(oldState =>
+                oldState.filter(
                   (budgetsDelete: BudgetsProps) => budgetsDelete.id !== id,
                 ),
               );
@@ -115,40 +144,17 @@ const Budgets: React.FC = () => {
     });
   }
 
-  const loadBudgets = useCallback(async () => {
-    try {
-      setLoading(true);
-      const {
-        data: { data, count },
-      } = await api.get('/budgets', {
-        params: {
-          pageStart: (pageState.pageStart - 1) * LIMIT_PER_PAGE,
-          pageLength: LIMIT_PER_PAGE,
-          search: pageState.searchValue,
-          pharmacie_id: pharmacie.id,
-        },
-      });
-      setBudgets(data);
-      setTotalPage(Math.ceil(count / LIMIT_PER_PAGE));
-      setBudgetsOrganization(data);
-      setLoading(false);
-    } catch {
-      setLoading(false);
-      addToast({
-        type: 'error',
-        title: 'Erro ao carregar Orçamentos',
-        description:
-          'Não foi possivel carregar a lista de orçamentos. tente novamente mais tarde',
-      });
-    }
-  }, [addToast, pageState, pharmacie.id]);
+  const handleSearchValue = useCallback(value => {
+    setPageState({ pageStart: 1, searchValue: value });
+  }, []);
+
+  const debounced = useCallback(debounce(handleSearchValue, 600), []);
 
   const handleChangePage = useCallback(currentPg => {
     setPageState(state => {
       return { ...state, pageStart: currentPg };
     });
   }, []);
-  console.log('salve', budgets);
   useEffect(() => {
     loadBudgets();
   }, [loadBudgets]);
@@ -161,7 +167,11 @@ const Budgets: React.FC = () => {
         </Title>
         <Functionalities>
           <Input>
-            <InputSearch icon={faSearch} placeholder="Buscar Por Orçamentos" />
+            <InputSearch
+              icon={faSearch}
+              placeholder="Buscar Por Orçamentos"
+              onChange={e => debounced(e.target.value)}
+            />
           </Input>
         </Functionalities>
       </Header>
@@ -178,7 +188,14 @@ const Budgets: React.FC = () => {
           <>
             <div>
               <span>{budgetsFarm.user.name}</span>
-              <span>{budgetsFarm.created_at}</span>
+              <span>
+                {budgetsFarm &&
+                  budgetsFarm.created_at &&
+                  parseDate({
+                    date: budgetsFarm.created_at,
+                    dateFormat: 'dd/MM/yyyy',
+                  })}
+              </span>
               <span>
                 R$
                 {budgetsFarm.value}
