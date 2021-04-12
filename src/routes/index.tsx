@@ -11,6 +11,7 @@ import MedicineRegistration from '~/pages/Medicines/MedicineRegistration';
 import MedicineEdit from '~/pages/Medicines/MedicineEdit';
 import Profile from '~/pages/Profile';
 import MedicineImport from '~/pages/Medicines/MedicineImport';
+import BudgetsView from '~/pages/Budgets/BudgetsView';
 
 const Routes: React.FC = () => (
   <Switch>
@@ -36,6 +37,7 @@ const Routes: React.FC = () => (
     />
 
     <Route path="/orcamentos" exact component={Budgets} isPrivate />
+    <Route path="/orcamentos/:id" component={BudgetsView} isPrivate />
   </Switch>
 );
 

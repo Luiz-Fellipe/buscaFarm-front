@@ -1,4 +1,5 @@
 import {
+  faEye,
   // faPencilAlt,
   faSearch,
   faTrash,
@@ -17,7 +18,7 @@ import colors from '~/styles/colors';
 import {
   Wrapper,
   ButtonDelete,
-  // ButtonEdit,
+  ButtonEdit,
   Header,
   Title,
   Functionalities,
@@ -186,7 +187,7 @@ const Budgets: React.FC = () => {
       >
         {budgets.map((budgetsFarm: BudgetsProps) => (
           <>
-            <div>
+            <div key="budgetsContainner">
               <span>{budgetsFarm.user.name}</span>
               <span>
                 {budgetsFarm &&
@@ -204,8 +205,8 @@ const Budgets: React.FC = () => {
                 PENDENTE
               </span> */}
               <div>
-                {/* <ButtonEdit type="button">
-                  <FontAwesomeIcon icon={faPencilAlt} />
+                {/* <ButtonEdit to={`orcamentos/${budgetsFarm.id}`}>
+                  <FontAwesomeIcon icon={faEye} />
                 </ButtonEdit> */}
                 <ButtonDelete
                   type="button"
