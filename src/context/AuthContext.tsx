@@ -14,6 +14,7 @@ interface User {
 
 interface EmployeePosition {
   name: string;
+  id: string;
 }
 interface Pharmacie {
   id: string;
@@ -41,7 +42,7 @@ interface AuthContextData {
   pharmacie: Pharmacie;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
-  updateEmployee(user: User): void;
+  updateEmployee(employee: Employee): void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -104,10 +105,11 @@ const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const updateEmployee = useCallback(
-    (user: User) => {
+    (employee: Employee) => {
       const updatedEmployee = {
         ...data.employee,
-        user,
+        ...employee,
+        user: employee.user,
       };
 
       localStorage.setItem(
