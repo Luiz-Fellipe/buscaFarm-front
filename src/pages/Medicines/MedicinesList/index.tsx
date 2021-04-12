@@ -32,6 +32,7 @@ import exclamationSvg from '~/assets/icons/exclamation-mark.svg';
 
 import { AindaSwal } from '~/components/global/AindaSwal';
 import colors from '~/styles/colors';
+import { useAuth } from '~/context/AuthContext';
 
 interface PageProps {
   pageStart: number;
@@ -63,6 +64,8 @@ const MedicineList: React.FC = () => {
     searchValue: '',
   });
 
+  const { pharmacie } = useAuth();
+
   const { addToast } = useToast();
 
   const searching: string | boolean =
@@ -74,8 +77,9 @@ const MedicineList: React.FC = () => {
       setLoading(true);
       const {
         data: { data, count },
-      } = await api.get('/pharmacies/medicines', {
+      } = await api.get('/pharmacies/medicines/get', {
         params: {
+          pharmacieId: pharmacie.id,
           pageStart: (pageState.pageStart - 1) * LIMIT_PER_PAGE,
           pageLength: LIMIT_PER_PAGE,
           search: pageState.searchValue,
@@ -95,7 +99,7 @@ const MedicineList: React.FC = () => {
           'Não foi possivel carregar a lista de medicamentos. tente novamente mais tarde',
       });
     }
-  }, [addToast, pageState]);
+  }, [addToast, pageState, pharmacie.id]);
 
   const handleChangePage = useCallback(currentPg => {
     setPageState(state => {
