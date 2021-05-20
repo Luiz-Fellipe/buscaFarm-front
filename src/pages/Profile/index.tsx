@@ -116,7 +116,6 @@ const Profile: React.FC = () => {
         if (inputValue && callback) {
           callback(options);
         } else {
-          console.log('capeta', options);
           setEmployeePositions(options);
         }
         setLoadingEmplPos(false);
@@ -184,7 +183,6 @@ const Profile: React.FC = () => {
           old_password,
         });
 
-        console.log('inferno', employeePositions);
         const currentEmployeePosition = employeePositions.find(
           e => e.value === employee_position_id,
         );
