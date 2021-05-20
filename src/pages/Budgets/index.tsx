@@ -205,9 +205,9 @@ const Budgets: React.FC = () => {
                 PENDENTE
               </span> */}
               <div>
-                {/* <ButtonEdit to={`orcamentos/${budgetsFarm.id}`}>
+                <ButtonEdit to={`orcamentos/${budgetsFarm.id}`}>
                   <FontAwesomeIcon icon={faEye} />
-                </ButtonEdit> */}
+                </ButtonEdit>
                 <ButtonDelete
                   type="button"
                   onClick={() => handleDelete(budgetsFarm.id)}
