@@ -4,12 +4,12 @@ import {
   faPlusCircle,
   faSearch,
   faTrash,
+  faUpload,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-
 import { debounce } from 'lodash';
+import ButtonLink from '~/components/global/ButtonLink';
 import Table from '~/components/global/Table';
 import InputSearch from '~/components/global/InputSearch';
 
@@ -22,6 +22,7 @@ import {
   Functionalities,
   Input,
   ButtonAdd,
+  ButtonGroup,
 } from './styles';
 import { useToast } from '~/context/ToastContext';
 import api from '~/services/api';
@@ -31,6 +32,7 @@ import exclamationSvg from '~/assets/icons/exclamation-mark.svg';
 
 import { AindaSwal } from '~/components/global/AindaSwal';
 import colors from '~/styles/colors';
+import { useAuth } from '~/context/AuthContext';
 
 interface PageProps {
   pageStart: number;
@@ -62,6 +64,8 @@ const MedicineList: React.FC = () => {
     searchValue: '',
   });
 
+  const { pharmacie } = useAuth();
+
   const { addToast } = useToast();
 
   const searching: string | boolean =
@@ -73,8 +77,9 @@ const MedicineList: React.FC = () => {
       setLoading(true);
       const {
         data: { data, count },
-      } = await api.get('/pharmacies/medicines', {
+      } = await api.get('/pharmacies/medicines/get', {
         params: {
+          pharmacieId: pharmacie.id,
           pageStart: (pageState.pageStart - 1) * LIMIT_PER_PAGE,
           pageLength: LIMIT_PER_PAGE,
           search: pageState.searchValue,
@@ -94,7 +99,7 @@ const MedicineList: React.FC = () => {
           'Não foi possivel carregar a lista de medicamentos. tente novamente mais tarde',
       });
     }
-  }, [addToast, pageState]);
+  }, [addToast, pageState, pharmacie.id]);
 
   const handleChangePage = useCallback(currentPg => {
     setPageState(state => {
@@ -118,7 +123,7 @@ const MedicineList: React.FC = () => {
     }).then(async action => {
       if (action.value) {
         api
-          .delete(`/medicines/delete/${id}`)
+          .delete(`pharmacies/medicines/${id}`)
 
           .then((res: any) => {
             if (res.status === 204) {
@@ -178,12 +183,19 @@ const MedicineList: React.FC = () => {
               placeholder="Buscar Por Medicamentos"
             />
           </Input>
-          <Link to="/medicamentos/cadastrar">
-            <ButtonAdd>
+          <ButtonGroup>
+            <ButtonLink
+              icon={faUpload}
+              className="primary"
+              to="/medicamentos/importar"
+            >
+              <span>IMPORTAR MEDICAMENTOS</span>
+            </ButtonLink>
+            <ButtonAdd to="/medicamentos/cadastrar">
               <FontAwesomeIcon icon={faPlusCircle} />
               <span>CADASTRAR</span>
             </ButtonAdd>
-          </Link>
+          </ButtonGroup>
         </Functionalities>
       </Header>
       <Table
@@ -217,7 +229,7 @@ const MedicineList: React.FC = () => {
 
               <ButtonDelete
                 type="button"
-                onClick={() => handleDelete(pharmacieMedicine.medicine.id)}
+                onClick={() => handleDelete(pharmacieMedicine.id)}
               >
                 <FontAwesomeIcon icon={faTrash} />
               </ButtonDelete>

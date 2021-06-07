@@ -1,5 +1,11 @@
-import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { useHistory } from 'react-router-dom';
 
 import {
   faArrowLeft,
@@ -34,6 +40,7 @@ import getValidationErrors from '~/utils/getValidationsErrors';
 import api from '~/services/api';
 import { useToast } from '~/context/ToastContext';
 import { useAuth } from '~/context/AuthContext';
+import AsyncSelect from '~/components/global/Selects/AsyncSelect';
 
 interface EmployeePositionProps {
   id?: string;
@@ -52,16 +59,22 @@ interface DataProps extends Request {
   old_password?: string;
 }
 
+interface IOptions {
+  value: string;
+  label: string;
+}
+
 const Profile: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const { addToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [avatarExist, setAvatarExist] = useState(true);
-
+  const [loadingEmplPos, setLoadingEmplPos] = useState(false);
   const { updateEmployee, employee } = useAuth();
-
+  const [employeePositions, setEmployeePositions] = useState<IOptions[]>([
+    { value: '', label: '' },
+  ]);
   const handleAvatarChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {
@@ -81,6 +94,43 @@ const Profile: React.FC = () => {
     [addToast, updateEmployee],
   );
 
+  const loadEmployeePositions = useCallback(
+    async (inputValue?: string, callback?: Function) => {
+      try {
+        setLoadingEmplPos(true);
+        const {
+          data: { data },
+        } = await api.get('/employees/position', {
+          params: {
+            pageStart: 0,
+            search: inputValue || '',
+            pageLength: 10,
+          },
+        });
+
+        const options = data.map((empl: EmployeePositionProps) => ({
+          value: empl.id,
+          label: empl.name,
+        }));
+
+        if (inputValue && callback) {
+          callback(options);
+        } else {
+          setEmployeePositions(options);
+        }
+        setLoadingEmplPos(false);
+      } catch (e) {
+        setLoadingEmplPos(false);
+        addToast({
+          type: 'error',
+          title: 'Erro ao buscar os cargos',
+          description: 'Ocorreu um erro ao buscar os cargos.',
+        });
+      }
+    },
+    [addToast],
+  );
+
   const handleSubmit = useCallback(
     async (data: DataProps) => {
       try {
@@ -95,6 +145,9 @@ const Profile: React.FC = () => {
               .required('Email obrigatório')
               .email('Digite um e-mail válido'),
           }),
+          employee_position_id: Yup.string().required(
+            'Nome do Cargo Obrigatório',
+          ),
 
           old_password: Yup.string().test(
             'password-empty',
@@ -117,10 +170,12 @@ const Profile: React.FC = () => {
           user: { name, email, phone },
           password,
           old_password,
+          employee_position_id,
         } = data;
 
         await api.put('/employees/edit', {
-          employee_id: id,
+          employee_id: employee.id,
+          employee_position_id,
           name,
           email,
           phone,
@@ -128,11 +183,22 @@ const Profile: React.FC = () => {
           old_password,
         });
 
+        const currentEmployeePosition = employeePositions.find(
+          e => e.value === employee_position_id,
+        );
+
         updateEmployee({
-          ...employee.user,
-          name,
-          email,
-          phone,
+          ...employee,
+          user: {
+            ...employee.user,
+            name,
+            email,
+            phone,
+          },
+          employee_position: {
+            id: employee_position_id,
+            name: currentEmployeePosition ? currentEmployeePosition?.label : '',
+          },
         });
 
         addToast({
@@ -156,12 +222,23 @@ const Profile: React.FC = () => {
         });
       }
     },
-    [history, addToast, id, employee.user, updateEmployee],
+    [history, addToast, employee, updateEmployee, employeePositions],
   );
 
   const handleErrorImage = useCallback(() => {
     setAvatarExist(false);
   }, []);
+
+  useEffect(() => {
+    loadEmployeePositions();
+  }, [loadEmployeePositions]);
+
+  useEffect(() => {
+    formRef.current?.setFieldValue('employee_position_id', {
+      label: employee.employee_position.name,
+      value: employee.employee_position.id,
+    });
+  }, [employee]);
 
   return (
     <>
@@ -207,14 +284,24 @@ const Profile: React.FC = () => {
           </Avatar>
 
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <Scope path="user">
-              <InputProfile
-                name="name"
-                icon={faUser}
-                placeholder="Nome"
-                defaultValue={employee.user.name}
+            <InputGroup>
+              <Scope path="user">
+                <InputProfile
+                  name="name"
+                  icon={faUser}
+                  placeholder="Nome"
+                  defaultValue={employee.user.name}
+                />
+              </Scope>
+              <AsyncSelect
+                isLoading={loadingEmplPos}
+                placeholder="Cargo"
+                defaultOptions={employeePositions}
+                loadOptions={loadEmployeePositions}
+                fieldName="employee_position_id"
+                name="employee_position_id"
               />
-            </Scope>
+            </InputGroup>
             <InputGroup>
               <fieldset>
                 <Scope path="user">
