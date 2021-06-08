@@ -28,17 +28,17 @@ export const Input = styled.div`
   width: 30%;
 `;
 
-export const ButtonAdd = styled(Link)`
-  background: ${colors.primary};
-  padding: 15px 20px;
-  border-radius: 10px;
-  color: ${colors.white};
-  border: none;
-  text-decoration: none;
-  svg {
-    margin-right: 20px;
-  }
-`;
+// export const ButtonAdd = styled(Link)`
+//   background: ${colors.primary};
+//   padding: 15px 20px;
+//   border-radius: 10px;
+//   color: ${colors.white};
+//   border: none;
+//   text-decoration: none;
+//   svg {
+//     margin-right: 20px;
+//   }
+// `;
 
 export const ButtonDelete = styled.button`
   padding: 5px 8px;
