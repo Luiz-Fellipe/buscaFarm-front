@@ -27,7 +27,7 @@ export const InputWrapper = styled.div<ContainerProps>`
   border-radius: 10px;
   border: 2px solid #d9d9d9;
   width: 100%;
-  margin-bottom: 20px;
+  
   align-items: center;
   color: #666369;
 
@@ -66,6 +66,8 @@ export const InputWrapper = styled.div<ContainerProps>`
     border: 0;
     color: #666360;
     padding: 16px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
     &::placeholder {
       color: #666360;
     }
@@ -88,4 +90,13 @@ export const InputWrapper = styled.div<ContainerProps>`
 export const SpanError = styled.span`
   color: ${colors.red};
   font-weight: bold;
+  display: block;
+  margin-top: 5px;
+`;
+
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  width: 100%;
 `;

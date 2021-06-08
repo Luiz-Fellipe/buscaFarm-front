@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
@@ -96,7 +96,7 @@ const SignIn: React.FC = () => {
             placeholder="Senha"
           />
 
-          <Link to="/">esqueceu sua senha?</Link>
+          {/* <Link to="/">esqueceu sua senha?</Link> */}
 
           <ButtonPrimary type="submit">
             {loading ? (

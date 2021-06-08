@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useField } from '@unform/core';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { InputWrapper, SpanError } from './styles';
+import { InputWrapper, SpanError, Container } from './styles';
 
 interface Props {
   name: string;
@@ -42,7 +42,7 @@ const Input: React.FC<InputProps> = ({
   }, [fieldName, registerField]);
 
   return (
-    <>
+    <Container>
       <InputWrapper
         isFilled={isFilled}
         isFocused={isFocused}
@@ -62,9 +62,8 @@ const Input: React.FC<InputProps> = ({
           {...rest}
         />
       </InputWrapper>
-
       {error && <SpanError>{error}</SpanError>}
-    </>
+    </Container>
   );
 };
 

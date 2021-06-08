@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   faPencilAlt,
-  faPlusCircle,
+  // faPlusCircle,
   faSearch,
   faTrash,
   faUpload,
@@ -21,7 +21,7 @@ import {
   Title,
   Functionalities,
   Input,
-  ButtonAdd,
+  // ButtonAdd,
   ButtonGroup,
 } from './styles';
 import { useToast } from '~/context/ToastContext';
@@ -191,10 +191,10 @@ const MedicineList: React.FC = () => {
             >
               <span>IMPORTAR MEDICAMENTOS</span>
             </ButtonLink>
-            <ButtonAdd to="/medicamentos/cadastrar">
+            {/* <ButtonAdd to="/medicamentos/cadastrar">
               <FontAwesomeIcon icon={faPlusCircle} />
               <span>CADASTRAR</span>
-            </ButtonAdd>
+            </ButtonAdd> */}
           </ButtonGroup>
         </Functionalities>
       </Header>

@@ -83,7 +83,7 @@ const Profile: React.FC = () => {
         data.append('avatar', e.target.files[0]);
 
         api.patch('/users/avatar', data).then(response => {
-          updateEmployee(response.data);
+          updateEmployee({ ...employee, user: response.data });
           addToast({
             type: 'success',
             title: 'Avatar atualizado!',
@@ -91,7 +91,7 @@ const Profile: React.FC = () => {
         });
       }
     },
-    [addToast, updateEmployee],
+    [addToast, updateEmployee, employee],
   );
 
   const loadEmployeePositions = useCallback(
@@ -211,8 +211,11 @@ const Profile: React.FC = () => {
 
         history.push('/funcionarios');
       } catch (err) {
-        const errors = getValidationErrors(err);
-        formRef.current?.setErrors(errors);
+        if (err.value) {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors);
+        }
+
         setLoading(false);
         addToast({
           type: 'error',
@@ -261,7 +264,7 @@ const Profile: React.FC = () => {
       </Wrapper>
       <ContainerWithBordes
         widthPercent="60"
-        heightPercent="40"
+        heightPercent="50"
         borderHeightPx="81"
         borderWidthPx="12"
       >

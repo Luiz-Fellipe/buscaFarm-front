@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSignOutAlt,
-  faBell,
+  // faBell,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import LogoHorizontal from '~/assets/images/BuscaFarmLogoHorizontal.svg';
@@ -59,9 +59,9 @@ const Header: React.FC = () => {
         </div>
       </Profile>
       <NotificationsAndLogout>
-        <button type="button">
+        {/* <button type="button">
           <FontAwesomeIcon icon={faBell} />
-        </button>
+        </button> */}
         <button type="button" onClick={signOut}>
           <FontAwesomeIcon icon={faSignOutAlt} />
         </button>
