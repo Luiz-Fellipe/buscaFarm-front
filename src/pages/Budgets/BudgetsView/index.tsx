@@ -6,7 +6,7 @@ import {
   faPhone,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
-
+import moment from 'moment';
 import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -120,11 +120,15 @@ const BudgetsView: React.FC = () => {
             <Header>
               <CreatedAt>
                 <span className="title-header">Criado em: </span>
-                <span id="created-at">{budgetsInfo.created_at}</span>
+                <span id="created-at">
+                  {moment(budgetsInfo.created_at).format('DD-MM-YYYY HH:mm:ss')}
+                </span>
               </CreatedAt>
               <UpdatedAt>
                 <span className="title-header">Última atualização em: </span>
-                <span id="updated-at">{budgetsInfo.updated_at}</span>
+                <span id="updated-at">
+                  {moment(budgetsInfo.updated_at).format('DD-MM-YYYY HH:mm:ss')}
+                </span>
               </UpdatedAt>
             </Header>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
