@@ -53,13 +53,20 @@ const Table: React.FC<TableProps> = ({
           <BoxLoading loading />
         </IsEmpty>
       )}
+      {!searching && !loading && !existData && (
+        <IsEmpty>
+          <span>Nenhum resultado encontrado</span>
+        </IsEmpty>
+      )}
 
       <TableFooter>
-        <Pagination
-          page={currentPage}
-          totalPages={totalPages}
-          changePage={handleChangePage}
-        />
+        {existData && (
+          <Pagination
+            page={currentPage}
+            totalPages={totalPages}
+            changePage={handleChangePage}
+          />
+        )}
       </TableFooter>
     </TableWrapper>
   );
