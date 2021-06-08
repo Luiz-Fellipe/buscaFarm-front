@@ -165,3 +165,8 @@ export const PhoneNumber = styled.div`
   justify-content: center;
   margin-top: 25px;
 `;
+
+export const ContainerList = styled.div`
+  max-height: 280px;
+  overflow: auto;
+`;
