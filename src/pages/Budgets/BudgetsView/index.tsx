@@ -27,6 +27,7 @@ import {
   DataUser,
   InputGroup,
   PhoneNumber,
+  ContainerList,
 } from './styles';
 import ButtonLink from '~/components/global/ButtonLink';
 
@@ -182,19 +183,22 @@ const BudgetsView: React.FC = () => {
                 <span>Preço</span>
               </HeaderBudgets>
 
-              {budgetsInfo.budgets_medicines &&
-                budgetsInfo.budgets_medicines.map((d: BudgetsInfoProps) => (
-                  <GridListBudgets key={d.id}>
-                    <span>{d?.medicine?.name}</span>
-                    <span>{d?.medicine?.manufacturer}</span>
-                    <span>{d?.medicine?.register}</span>
-                    <span>{d?.amount}</span>
-                    <span>
-                      R$
-                      {d?.price}
-                    </span>
-                  </GridListBudgets>
-                ))}
+              <ContainerList>
+                {budgetsInfo.budgets_medicines &&
+                  budgetsInfo.budgets_medicines.map((d: BudgetsInfoProps) => (
+                    <GridListBudgets key={d.id}>
+                      <span>{d?.medicine?.name}</span>
+                      <span>{d?.medicine?.manufacturer}</span>
+                      <span>{d?.medicine?.register}</span>
+                      <span>{d?.amount}</span>
+                      <span>
+                        R$
+                        {d?.price}
+                      </span>
+                    </GridListBudgets>
+                  ))}
+              </ContainerList>
+
               <Total>
                 <span>Valor Total:</span>
                 <span />
